@@ -1,11 +1,10 @@
-from .repository import Repository
+from managers.repository import RepositoryManager
+from managers.user import UserManager
 
 
 class Pyolite(object):
+
   def __init__(self, admin_repository):
     self.admin_repository = admin_repository
-
-  def repo(self, name):
-    repository = Repository(name)
-    repository.save()
-    return repository
+    self.repos = RepositoryManager(admin_repository)
+    self.users = UserManager(admin_repository)
