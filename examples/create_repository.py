@@ -1,7 +1,8 @@
 from pyolite import Pyolite
 
 # initial olite object
-olite = Pyolite(repository='~/presslabs/ansible-playbooks/gitolite-admin')
+admin_repository = '~/presslabs/ansible-playbooks/gitolite-admin'
+olite = Pyolite(admin_repository=admin_repository)
 
 # create a repo
 repo = olite.repo('awesome_name')
