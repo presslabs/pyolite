@@ -10,13 +10,20 @@ repo = olite.repos.get('awesome_name')
 repo = olite.repos.create('awesome_name')
 
 # add a new user to repo
-repo.users.add('bob', permissions='RW+', path_key='~/.ssh/id_rsa.pub',
-               raw_key='my-awesome-key')
+bob = repo.users.add('bob', permissions='RW+', key_path='~/.ssh/id_rsa.pub',
+                     key='my-awesome-key')
 # add an existing user to repo
-repo.users.add('alice')
+repo.users.add('alice', permission='R')
+
+repo.users.modify('alice', permission='W+')
 
 # show users from repos
 print repo.users.all()
 
 # remove user
 repo.users.delete('alice')
+
+
+alice = olite.users.get_or_create('alice')
+# alice.keys.append('key1')
+# alice.repos => list
