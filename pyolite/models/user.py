@@ -16,10 +16,26 @@ class User(object):
 
     # get user's repos
     repos = []
-    repos_path = Path(admin_path, 'conf/repos/')
+    repos_path = Path(admin_path, 'conf/')
     for repo in repos_path.walk():
+      if repo.isdir():
+        continue
+
       with open(repo) as f:
         if name in f.read():
           repos.append(repo)
 
-    return cls(name, repos, keys)
+    if repos or keys:
+      return cls(name, repos, keys)
+    else:
+      return None
+
+  @property
+  def is_admin(self):
+    for repo in self.repos:
+      if 'gitolite.conf' in repo:
+        return True
+    return False
+
+  def __str__(self):
+    return "< %s >" % self.name

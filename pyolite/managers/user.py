@@ -26,3 +26,6 @@ class UserManager(Manager):
 
   def get(self, name):
     return User.get_by_name(name, self.path)
+
+  def get_or_create(self, name, key=None, key_path=None):
+    return self.get(name) or self.create(name, key, key_path)
