@@ -1,22 +1,30 @@
 from unipath import Path
 
+from pyolite.keys import ListKeys
+
 
 class User(object):
-  def __init__(self, name, repos=None, keys=None):
+  def __init__(self, path, git, name, repos=None, keys=None):
     self.name = name
     self.repos = repos or []
-    self.keys = keys or []
+
+    self.path = path
+    self.git = git
+
+    keys = keys or []
+    self.keys = ListKeys(self)
+    self.keys = self.keys + keys
 
   @classmethod
-  def get_by_name(cls, name, admin_path):
+  def get_by_name(cls, name, path, git):
 
     # get user's keys
-    key_path = Path(admin_path, 'keydir')
+    key_path = Path(path, 'keydir')
     keys = [key for key in key_path.walk() if key.endswith('%s.pub' % name)]
 
     # get user's repos
     repos = []
-    repos_path = Path(admin_path, 'conf/')
+    repos_path = Path(path, 'conf/')
     for repo in repos_path.walk():
       if repo.isdir():
         continue
@@ -26,7 +34,7 @@ class User(object):
           repos.append(repo)
 
     if repos or keys:
-      return cls(name, repos, keys)
+      return cls(path, git, name, repos, keys)
     else:
       return None
 

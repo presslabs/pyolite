@@ -1,7 +1,3 @@
-import hashlib
-
-from unipath import Path
-
 from pyolite.models.user import User
 from .manager import Manager
 
@@ -11,21 +7,8 @@ class UserManager(Manager):
     if key is None and key_path is None:
       raise ValueError('You need to specify a key or key_path')
 
-    if key_path:
-      with open(key_path) as f:
-        key = f.read()
-
-    directory = Path(self.path, 'keydir', hashlib.md5(key).hexdigest())
-    directory.mkdir()
-
-    key_file = Path(directory, "%s.pub" % name)
-    key_file.write_file(key)
-
-    self.git.commit(['keydir'], 'Added new key for user %s' % name)
-    return User.get_by_name(name, self.path)
+    user = User(self.path, self.git, name, keys=[key or key_path])
+    print user
 
   def get(self, name):
-    return User.get_by_name(name, self.path)
-
-  def get_or_create(self, name, key=None, key_path=None):
-    return self.get(name) or self.create(name, key, key_path)
+    return User.get_by_name(name, self.path, self.git)

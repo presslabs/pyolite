@@ -15,13 +15,9 @@ class Manager(object):
     if not self.path.isdir():
       raise ValueError('Admin repository path should point to directory')
 
-  def get_or_create(self, lookup_entity):
-    entity = self.get(lookup_entity)
-
-    if not entity:
-      entity = self.create(lookup_entity)
-
-    return entity
+  def get_or_create(self, lookup_entity, *args, **kwargs):
+    return self.get(lookup_entity) or self.create(lookup_entity, *args,
+                                                  **kwargs)
 
   @abstractmethod
   def get(self, entity):
