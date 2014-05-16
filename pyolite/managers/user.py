@@ -2,8 +2,8 @@ import hashlib
 
 from unipath import Path
 
+from pyolite.models.user import User
 from .manager import Manager
-#from pyolite.models.user import User
 
 
 class UserManager(Manager):
@@ -25,4 +25,4 @@ class UserManager(Manager):
     key_file.write_file(key)
 
     self.git.commit(['keydir'], 'Added new key for user %s' % name)
-    #return User.get_by_name(name)
+    return User.get_by_name(name, self.path)
