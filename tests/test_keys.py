@@ -36,3 +36,17 @@ class TestKeyList(TestCase):
     eq_(mock_file.isfile.call_count, 1)
     eq_(mock_file.mkdir.call_count, 1)
     mock_file.write_file.assert_called_once_with('nothing to see here\n')
+
+  def test_list_addition(self):
+    mock_user = MagicMock()
+    mock_append = MagicMock()
+
+    keys = ListKeys(mock_user)
+    keys.append = mock_append
+
+    keys += ['first_key', 'second_key']
+
+    mock_append.has_calls([
+        call('first_key'),
+        call('second_key'),
+    ])
