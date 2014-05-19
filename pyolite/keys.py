@@ -12,7 +12,7 @@ class ListKeys(list):
     key = Path(self.user.path, key)
 
     if key.isfile():
-      with open(key) as f:
+      with open(str(key)) as f:
         key = f.read()
 
     directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
