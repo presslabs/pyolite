@@ -43,3 +43,31 @@ class TestManager(TestCase):
 
         eq_(manager.get_or_create('mine', 'key'), 'user')
         mocked_get.assert_called_once_with('mine')
+
+  @raises(NotImplementedError)
+  def test_get_abstract_method_method(self):
+    mocked_path = MagicMock()
+    mocked_git = MagicMock()
+
+    with patch.multiple('pyolite.managers.manager',
+                        Path=MagicMock(return_value=mocked_path),
+                        Git=MagicMock(return_value=mocked_git)):
+      with patch.multiple('pyolite.managers.manager.Manager',
+                          __abstractmethods__=set()):
+
+        manager = Manager('/path/to/admin/repo')
+        manager.get('entity')
+
+  @raises(NotImplementedError)
+  def test_create_abstract_method_method(self):
+    mocked_path = MagicMock()
+    mocked_git = MagicMock()
+
+    with patch.multiple('pyolite.managers.manager',
+                        Path=MagicMock(return_value=mocked_path),
+                        Git=MagicMock(return_value=mocked_git)):
+      with patch.multiple('pyolite.managers.manager.Manager',
+                          __abstractmethods__=set()):
+
+        manager = Manager('/path/to/admin/repo')
+        manager.create('entity')
