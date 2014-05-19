@@ -10,8 +10,12 @@ class Git(object):
     self.remote = getattr(self.repo.remotes, remote)
 
   def commit(self, objects, message):
-    self.index.add(objects)
+    # validate commit message
+    if not message or not isinstance(message, basestring):
+      raise ValueError("Commit message should not be empty or not string")
 
+    # create the commit
+    self.index.add(objects)
     self.index.commit(message)
 
     # fetch, pull and push from and to the remote
