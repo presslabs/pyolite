@@ -9,6 +9,9 @@ class RepositoryManager(Manager):
     super(RepositoryManager, self).__init__(*args, **kwargs)
     self.users = self._get_users()
 
+  def _get_users(self):
+    return []
+
   def get(self, lookup_repo):
     return Repository.get_by_name(lookup_repo, self.path, self.git)
 
@@ -17,9 +20,9 @@ class RepositoryManager(Manager):
     if repo_file.exists():
       raise ValueError('Repository %s already exists' % lookup_repo)
 
-    repo_file.write_file("repo %s\n")
+    repo_file.write_file("repo %s\n" % lookup_repo)
 
-    self.commit([repo_file], 'Created repo %s' % lookup_repo)
+    self.git.commit([str(repo_file)], 'Created repo %s' % lookup_repo)
 
     return Repository(lookup_repo, self.path, self.git)
 
