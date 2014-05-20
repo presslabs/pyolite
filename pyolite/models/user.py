@@ -29,7 +29,7 @@ class User(object):
       if repo.isdir():
         continue
 
-      with open(repo) as f:
+      with open(str(repo)) as f:
         if name in f.read():
           repos.append(repo)
 

@@ -6,7 +6,7 @@ from nose.tools import raises, eq_
 from pyolite.managers.user import UserManager
 
 
-class TestUser(TestCase):
+class TestUserManager(TestCase):
   @raises(ValueError)
   def test_create_user_with_no_key(self):
     with patch.multiple('pyolite.managers.manager',
