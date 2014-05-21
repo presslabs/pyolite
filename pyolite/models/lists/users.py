@@ -23,14 +23,16 @@ class ListUsers(object):
     with open(str(self.repo_config)) as f:
       config = f.read()
       for match in re.compile('=( *)(\w+)').finditer(config):
-        print match
         users.append(match.group(2))
 
     # TODO: return a users manager
     return users
 
   def add(self, user, permission):
-    if not isinstance(user, User):
+    if isinstance(user, basestring):
+      user = User.get_by_name(user, self.repo.path, self.repo.git)
+
+    if not isinstance(user, User) or not user:
       message = 'We need an user object. Please see examples/repository'
       raise ValueError(message)
 
