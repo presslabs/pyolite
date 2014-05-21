@@ -23,9 +23,10 @@ class ListUsers(object):
     with open(str(self.repo_config)) as f:
       config = f.read()
       for match in re.compile('=( *)(\w+)').finditer(config):
+        print match
         users.append(match.group(2))
 
-    # return a users manager
+    # TODO: return a users manager
     return users
 
   def add(self, user, permission):
@@ -33,10 +34,10 @@ class ListUsers(object):
       message = 'We need an user object. Please see examples/repository'
       raise ValueError(message)
 
-    with open(str(self.repo_config)) as f:
+    with open(str(self.repo_config), 'a+') as f:
       # check if we have the user in repo
-      users = re.compile('=( *)(\w+)').findall(f.read())
-      if users:
+      users = [item[1] for item in re.compile('=( *)(\w+)').findall(f.read())]
+      if user.name in users:
         raise ValueError('User %s already exists. Please check '
                          'example/repository.py in order to see how you can '
                          'delete or change permissions' % user.name)
@@ -46,7 +47,11 @@ class ListUsers(object):
          ACCEPTED_PERMISSIONS != set([]):
         raise ValueError('Invalid permissions. They must be from %s' %
                          ACCEPTED_PERMISSIONS)
-      # add user to repo def append(self, item):
+      # add user to repo
+      f.write("    %s     =    %s\n" % (permission, user.name))
+      self.repo.git.commit(['conf'],
+                           'User %s added to repo %s with permissions: %s' %
+                           (user, self.repo.name, permission))
 
   def __iter__(self):
     for user in self._user:
