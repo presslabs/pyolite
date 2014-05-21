@@ -17,3 +17,6 @@ class Repository(object):
         if "repo %s" % lookup_repo in f.read():
           return cls(lookup_repo, path, git)
     return None
+
+  def __str__(self):
+    return "< %s >" % self.name
