@@ -15,3 +15,6 @@ vlad = olite.users.get_or_create(name='vlad')
 
 # check if user is admin or not
 print vlad.is_admin
+
+# return all users from system
+print olite.users.all()

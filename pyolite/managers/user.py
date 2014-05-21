@@ -26,6 +26,7 @@ class UserManager(Manager):
 
       files = re.compile('(\w+.pub)').findall(str(obj))
       if files:
-        users += [user[:-4] for user in files]
+        users += files
 
-    return users
+    return [User.get_by_name(user[:-4], self.path, self.git)
+            for user in set(users)]

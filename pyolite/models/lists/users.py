@@ -5,6 +5,9 @@ from unipath import Path
 from pyolite.models.user import User
 
 
+ACCEPTED_PERMISSIONS = set('RW+CD')
+
+
 class ListUsers(object):
   def __init__(self, repo):
     self.repo = repo
@@ -22,6 +25,7 @@ class ListUsers(object):
       for match in re.compile('=( *)(\w+)').finditer(config):
         users.append(match.group(2))
 
+    # return a users manager
     return users
 
   def add(self, user, permission):
@@ -32,10 +36,17 @@ class ListUsers(object):
     with open(str(self.repo_config)) as f:
       # check if we have the user in repo
       users = re.compile('=( *)(\w+)').findall(f.read())
-      print users
+      if users:
+        raise ValueError('User %s already exists. Please check '
+                         'example/repository.py in order to see how you can '
+                         'delete or change permissions' % user.name)
 
-  def append(self, item):
-    pass
+      # check user's permissions
+      if set(map(lambda permission: permission.upper(), permission)) - \
+         ACCEPTED_PERMISSIONS != set([]):
+        raise ValueError('Invalid permissions. They must be from %s' %
+                         ACCEPTED_PERMISSIONS)
+      # add user to repo def append(self, item):
 
   def __iter__(self):
     for user in self._user:

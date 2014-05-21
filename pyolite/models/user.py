@@ -12,8 +12,7 @@ class User(object):
     self.git = git
 
     keys = keys or []
-    self.keys = ListKeys(self)
-    self.keys = self.keys + keys
+    self.keys = ListKeys(self, keys)
 
   @classmethod
   def get_by_name(cls, name, path, git):
@@ -46,4 +45,7 @@ class User(object):
     return False
 
   def __str__(self):
+    return "< %s >" % self.name
+
+  def __repr__(self):
     return "< %s >" % self.name
