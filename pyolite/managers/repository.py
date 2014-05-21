@@ -1,16 +1,13 @@
 from unipath import Path
 
 from pyolite.models.repository import Repository
+
 from .manager import Manager
 
 
 class RepositoryManager(Manager):
   def __init__(self, *args, **kwargs):
     super(RepositoryManager, self).__init__(*args, **kwargs)
-    self.users = self._get_users()
-
-  def _get_users(self):
-    return []
 
   def get(self, lookup_repo):
     return Repository.get_by_name(lookup_repo, self.path, self.git)
@@ -25,6 +22,3 @@ class RepositoryManager(Manager):
     self.git.commit([str(repo_file)], 'Created repo %s' % lookup_repo)
 
     return Repository(lookup_repo, self.path, self.git)
-
-  def get_or_create(self, lookup_repo):
-    pass

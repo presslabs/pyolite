@@ -1,11 +1,15 @@
 from unipath import Path
 
+from pyolite.models.lists import ListUsers
+
 
 class Repository(object):
   def __init__(self, name, path, git):
     self.name = name
     self.path = path
     self.git = git
+
+    self.users = ListUsers(self)
 
   @classmethod
   def get_by_name(cls, lookup_repo, path, git):
