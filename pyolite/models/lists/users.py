@@ -28,13 +28,18 @@ class ListUsers(object):
     # TODO: return a users manager
     return users
 
-  def add(self, user, permission):
+  def _get_user(self, user):
     if isinstance(user, basestring):
       user = User.get_by_name(user, self.repo.path, self.repo.git)
 
     if not isinstance(user, User) or not user:
       message = 'We need an user object. Please see examples/repository'
       raise ValueError(message)
+
+    return user
+
+  def add(self, user, permission):
+    user = self._get_user(user)
 
     with open(str(self.repo_config), 'a+') as f:
       # check if we have the user in repo
@@ -57,6 +62,18 @@ class ListUsers(object):
 
     user.repos.append(self.repo)
     return user
+
+  def edit(self, user, permission):
+    user = self._get_user(user)
+
+    with open(str(self.repo_config), 'r+') as f:
+      content = f.read()
+      content = re.sub(r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name,
+                       r"\n    %s    =    %s" % (permission, user.name),
+                       content)
+      f.seek(0)
+      f.write(content)
+      f.truncate()
 
   def __iter__(self):
     for user in self._user:
