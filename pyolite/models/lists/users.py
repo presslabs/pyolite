@@ -75,6 +75,26 @@ class ListUsers(object):
       f.write(content)
       f.truncate()
 
+    self.repo.git.commit(['conf'],
+                         "User %s has %s permission for repository %s" %
+                         (user.name, permission, self.repo.name))
+    return user
+
+  def remove(self, user):
+    user = self._get_user(user)
+
+    with open(str(self.repo_config), 'r+') as f:
+      content = f.read()
+      content = re.sub(r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name,
+                       r"", content)
+      f.seek(0)
+      f.write(content)
+      f.truncate()
+
+    self.repo.git.commit(['conf'],
+                         "Deleted user %s from repository %s" %
+                         (user.name, self.repo.name))
+
   def __iter__(self):
     for user in self._user:
       yield user
