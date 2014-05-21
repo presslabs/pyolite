@@ -53,6 +53,9 @@ class ListUsers(object):
                            'User %s added to repo %s with permissions: %s' %
                            (user, self.repo.name, permission))
 
+    user.repos.append(self.repo)
+    return user
+
   def __iter__(self):
     for user in self._user:
       yield user
