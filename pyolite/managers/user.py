@@ -1,3 +1,7 @@
+import re
+
+from unipath import Path
+
 from pyolite.models.user import User
 from .manager import Manager
 
@@ -11,3 +15,17 @@ class UserManager(Manager):
 
   def get(self, name):
     return User.get_by_name(name, self.path, self.git)
+
+  def all(self):
+    users = []
+    key_dir = Path(self.path, 'keydir')
+
+    for obj in key_dir.walk():
+      if obj.isdir():
+        continue
+
+      files = re.compile('(\w+.pub)').findall(str(obj))
+      if files:
+        users += [user[:-4] for user in files]
+
+    return users
