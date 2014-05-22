@@ -1,13 +1,13 @@
-from unittest import TestCase
+from spec import Spec
 
 from mock import MagicMock, patch, call
-from nose.tools import eq_, raises
+from nose.tools import eq_
 
 from pyolite.models.lists.users import ListUsers
 from pyolite.models.user import User
 
 
-class TestUserList(TestCase):
+class TestUserList(Spec):
   def test_get_users(self):
     mocked_path = MagicMock()
     mocked_re = MagicMock()
