@@ -60,3 +60,23 @@ class TestUserList(TestCase):
 
       eq_(repo_users._get_user('user'), my_user)
     ListUsers._get_users = _get_users
+
+  def test_replace_in_repo_config(self):
+    mocked_path = MagicMock()
+    mocked_re = MagicMock()
+    mocked_repository = MagicMock()
+
+    mocked_path.return_value = 'tests/fixtures/config.conf'
+    mocked_re.sub.return_value = 'another_text'
+
+    _get_users = ListUsers._get_users
+    ListUsers._get_users = lambda x: []
+    with patch.multiple('pyolite.models.lists.users',
+                        Path=mocked_path, re=mocked_re):
+      repo_users = ListUsers(mocked_repository)
+      repo_users._replace_in_repo('pattern', 'string')
+
+      with open('tests/fixtures/config.conf') as f:
+        eq_(f.read(), 'another_text')
+
+    ListUsers._get_users = _get_users
