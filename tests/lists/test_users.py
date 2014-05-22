@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from mock import MagicMock, patch, call
-from nose.tools import eq_
+from nose.tools import eq_, raises
 
 from pyolite.models.lists.users import ListUsers
 from pyolite.models.user import User
@@ -80,3 +80,28 @@ class TestUserList(TestCase):
         eq_(f.read(), 'another_text')
 
     ListUsers._get_users = _get_users
+
+  def test_add_existing_user_in_repo(self):
+    mocked_path = MagicMock()
+    mocked_re = MagicMock()
+    mocked_repository = MagicMock()
+    mocked_user = MagicMock()
+
+    mocked_user.name = 'user'
+
+    mocked_path.return_value = 'tests/fixtures/users.conf'
+    mocked_re.compile('=( *)(\w+)').findall.return_value = [(None, 'user')]
+
+    _get_users = ListUsers._get_users
+    _get_user = ListUsers._get_user
+    ListUsers._get_users = lambda x: []
+    ListUsers._get_user = lambda x, user: mocked_user
+    with patch.multiple('pyolite.models.lists.users',
+                        Path=mocked_path, re=mocked_re):
+      repo_users = ListUsers(mocked_repository)
+
+      try:
+        repo_users.add('test', 'RW+')
+      except ValueError:
+        ListUsers._get_users = _get_users
+        ListUsers._get_user = _get_user
