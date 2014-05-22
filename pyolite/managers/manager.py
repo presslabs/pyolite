@@ -21,8 +21,8 @@ class Manager(object):
 
   @abstractmethod
   def get(self, entity):
-    raise NotImplementedError("Each manager has a get method")
+    raise NotImplementedError("Each manager needs a get method")
 
   @abstractmethod
   def create(self, entity):
-    raise NotImplementedError("Each manager has a create method")
+    raise NotImplementedError("Each manager needs a create method")
