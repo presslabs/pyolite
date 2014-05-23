@@ -42,7 +42,7 @@ class User(object):
       user = User.get_by_name(user, path, git)
 
     if not isinstance(user, User) or not user:
-      message = 'We need an user object. Please see examples/repository'
+      message = 'Missing user or invalid type'
       raise ValueError(message)
 
     return user
