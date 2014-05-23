@@ -8,6 +8,20 @@ from pyolite.models.lists.users import ListUsers
 
 class TestUserList(Spec):
   @raises(ValueError)
+  def test_it_should_raise_ValueError_if_user_exists_when_we_add_him(self):
+    mocked_repo = MagicMock()
+    mocked_repository = MagicMock()
+    mocked_user = MagicMock()
+
+    mocked_user.get.return_value = MagicMock(name='another_user')
+    mocked_repo.users = ['another_user']
+
+    with patch.multiple('pyolite.models.lists.users',
+                        Repo=mocked_repo, User=mocked_user):
+      repo_users = ListUsers(mocked_repository)
+      repo_users.add('test', 'hiRW+')
+
+  @raises(ValueError)
   def test_if_we_add_invalid_permissions_it_should_raise_ValueError(self):
     mocked_repo = MagicMock()
     mocked_repository = MagicMock()
