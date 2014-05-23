@@ -21,7 +21,6 @@ class TestRepositoryModel(object):
                         Path=MagicMock(return_value=mocked_path),
                         ListUsers=MagicMock(return_value=mocked_users)):
       repo = Repository.get_by_name('new_one', 'simple_path', 'git')
-      print repo
 
       eq_(repo.name, 'new_one')
       eq_(repo.path, 'simple_path')

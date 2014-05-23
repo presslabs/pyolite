@@ -44,7 +44,7 @@ class TestKeyList(TestCase):
     keys = ListKeys(mock_user)
     keys.append = mock_append
 
-    keys += ['first_key', 'second_key']
+    keys = keys + ['first_key', 'second_key']
 
     mock_append.has_calls([
         call('first_key'),
