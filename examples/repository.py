@@ -6,7 +6,7 @@ olite = Pyolite(admin_repository=admin_repository)
 
 # create a repo
 repo = olite.repos.get('my_repo')
-# repo = olite.repos.create('ydo')
+repo = olite.repos.create('ydo')
 repo = olite.repos.get_or_create('second_repo')
 
 print "Repo's users: %s" % repo.users

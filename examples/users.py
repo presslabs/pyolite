@@ -14,6 +14,10 @@ vlad = olite.users.get(name='admin')
 # get_or_create django style
 vlad = olite.users.get_or_create('alice')
 
+# add new key to user
+vlad.keys.append('/path/to/key')
+vlad.keys.append('just put the key here')
+
 # check if user is admin or not
 print vlad.is_admin
 
