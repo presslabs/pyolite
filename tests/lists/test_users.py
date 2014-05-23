@@ -22,30 +22,28 @@ class TestUserList(Spec):
       repo_users.add('test', 'hiRW+')
 
   def test_it_should_add_a_new_user_to_repo_if_is_valid(self):
-    mocked_path = MagicMock()
-    mocked_re = MagicMock()
+    mocked_repo = MagicMock()
     mocked_repository = MagicMock()
     mocked_user = MagicMock()
 
-    mocked_user.name = 'another_user'
-    mocked_user.__str__ = lambda x: 'another_user'
+    mock_single_user = MagicMock()
+    mock_single_user.name = 'another_user'
+    mock_single_user.__str__ = lambda x: 'another_user'
+
     mocked_repository.name = 'test_repo'
 
-    mocked_path.return_value = 'tests/fixtures/users.conf'
-    mocked_re.compile('=( *)(\w+)').findall.return_value = [(None, 'user')]
+    mocked_user.get.return_value = mock_single_user
+    mocked_repo.users = ['user']
 
     with patch.multiple('pyolite.models.lists.users',
-                        Path=mocked_path, re=mocked_re):
+                        Repo=MagicMock(return_value=mocked_repo),
+                        User=mocked_user):
       repo_users = ListUsers(mocked_repository)
       repo_users.add('test', 'RW+')
 
-      with open('tests/fixtures/users.conf', 'r+') as f:
-        content = f.read()
-        f.seek(0)
-        f.write('')
-        f.truncate()
+      content = '    RW+     =    another_user\n'
+      mocked_repo.write.assert_called_once_with(content)
 
-      eq_(content, "    RW+     =    another_user\n")
       message = 'User another_user added to repo test_repo ' \
                 'with permissions: RW+'
       mocked_repository.git.commit.assert_called_once_with(['conf'], message)
