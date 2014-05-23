@@ -73,3 +73,30 @@ class TestUserList(Spec):
 
       message = "Deleted user another_user from repository test_repo"
       mocked_repository.git.commit.has_calls([call(['conf'], message)])
+
+  def test_user_edit_permissions(self):
+    mocked_repo = MagicMock()
+    mocked_repository = MagicMock()
+    mocked_user = MagicMock()
+
+    mock_single_user = MagicMock()
+    mock_single_user.name = 'another_user'
+    mock_single_user.__str__ = lambda x: 'another_user'
+
+    mocked_repository.name = 'test_repo'
+
+    mocked_user.get.return_value = mock_single_user
+    mocked_repo.users = ['user']
+
+    with patch.multiple('pyolite.models.lists.users',
+                        Repo=MagicMock(return_value=mocked_repo),
+                        User=mocked_user):
+      repo_users = ListUsers(mocked_repository)
+      repo_users.edit('test', 'R')
+
+      pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % 'another_user'
+      string = r"\n    %s    =    %s" % ('R', 'another_user')
+      mocked_repo.replace.assert_called_once_with(pattern, string)
+
+      message = "User another_user has R permission for repository test_repo"
+      mocked_repository.git.commit.has_calls([call(['conf'], message)])
