@@ -2,7 +2,6 @@ from spec import Spec
 
 from mock import MagicMock, patch, call
 from nose.tools import raises
-
 from pyolite.models.lists.users import ListUsers
 
 

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from mock import MagicMock, patch, call
-from nose.tools import eq_
+from nose.tools import eq_, raises
 
 from pyolite.models.user import User
 
@@ -61,3 +61,11 @@ class TestUserModel(TestCase):
 
       user.repos = ['/path/to/gitolite/admin/gitolite.conf']
       eq_(user.is_admin, True)
+
+  @raises(ValueError)
+  def test_get_user_by_nothing_it_should_raise_value_error(self):
+    mocks = self.set_mocks()
+
+    with patch.multiple('pyolite.models.user', Path=mocks['path'],
+                        ListKeys=mocks['keys']):
+      User.get(MagicMock(), mocks['git'], mocks['path'])
