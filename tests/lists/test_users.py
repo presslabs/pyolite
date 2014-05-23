@@ -59,7 +59,7 @@ class TestUserList(Spec):
 
       message = 'User another_user added to repo test_repo ' \
                 'with permissions: RW+'
-      mocked_repository.git.commit.assert_called_once_with(['conf'], message)
+      mocked_repository.git.commit.has_calls([call(['conf'], message)])
 
   def test_user_removing(self):
     mocked_repo = MagicMock()
