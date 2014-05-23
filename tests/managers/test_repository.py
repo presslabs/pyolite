@@ -62,8 +62,8 @@ class TestRepositoryManager(TestCase):
                                  'conf/repos/dont_exists.conf'))
       eq_(mocked_file.exists.call_count, 1)
       mocked_file.write_file.assert_called_once_with('repo dont_exists\n')
-      mocked_git.commit.assert_called_once_with(['dont_exists'],
-                                                'Created repo dont_exists')
+      mocked_git.commit.has_calls(call(['dont_exists'],
+                                       'Created repo dont_exists'))
       mocked_repository.assert_called_once_with('dont_exists', mocked_path,
                                                 mocked_git)
       eq_(repo, 'new repo')
