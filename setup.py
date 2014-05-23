@@ -1,9 +1,12 @@
 from setuptools import setup, find_packages
 
-requires = []
+
+requires = ['GitPython', 'Unipath', 'argparse', 'async', 'coverage', 'gitdb',
+            'mock', 'nose', 'six', 'smmap', 'spec', 'wsgiref']
+
 
 setup(name="pyolite",
-      version="0.1",
+      version="1.0",
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
@@ -22,5 +25,4 @@ setup(name="pyolite",
           'Operating System :: POSIX',
           'Topic :: System :: Networking',
           'Programming Language :: Python :: 2.7',
-      ]
-)
+      ])

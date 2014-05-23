@@ -1,18 +1,18 @@
 from pyolite import Pyolite
 
 # initial olite object
-admin_repository = '/home/wok/presslabs/pyolite/gitolite-admin/'
+admin_repository = '/home/absolute/path/to/gitolite/repo/'
 olite = Pyolite(admin_repository=admin_repository)
 
 # create user object
-vlad = olite.users.create(name='ameno',
-                          key_path='/home/wok/.ssh/second_rsa.pub')
+vlad = olite.users.create(name='bob',
+                          key_path='~/.ssh/second_rsa.pub')
 
 # get user by name
-vlad = olite.users.get(name='ameno')
+vlad = olite.users.get(name='admin')
 
 # get_or_create django style
-vlad = olite.users.get_or_create('ameno')
+vlad = olite.users.get_or_create('alice')
 
 # check if user is admin or not
 print vlad.is_admin
