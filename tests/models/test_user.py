@@ -49,6 +49,9 @@ class TestUserModel(TestCase):
           call('path', 'conf/')
       ])
 
+      eq_(str(test_user), '< vtemian >')
+      eq_(repr(test_user), '< vtemian >')
+
   def test_if_user_is_admin(self):
     mocks = self.set_mocks()
 
