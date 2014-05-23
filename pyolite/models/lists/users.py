@@ -1,7 +1,4 @@
-import re
-
-from unipath import Path
-
+from pyolite.repo import Repo
 from pyolite.models.user import User
 
 
@@ -9,86 +6,54 @@ ACCEPTED_PERMISSIONS = set('RW+CD')
 
 
 class ListUsers(object):
-  def __init__(self, repo):
-    self.repo = repo
-    self.repo_config = Path(self.repo.path, 'conf/repos/',
-                            "%s.conf" % self.repo.name)
+  def __init__(self, repository):
+    self.repository_model = repository
+    self.repo = Repo(repository.path)
 
-    self._users = self._get_users()
+  def with_user(func):
+    def decorated(self, user, *args, **kwargs):
+      user = User.get(user, self.repository_model.path,
+                      self.repository_model.git)
+      return func(self, user, *args, **kwargs)
+    return decorated
 
-  def _get_users(self):
-    # TODO: check for groups
-    users = []
-
-    with open(str(self.repo_config)) as f:
-      config = f.read()
-      for match in re.compile('=( *)(\w+)').finditer(config):
-        users.append(match.group(2))
-
-    # TODO: return a users manager
-    return users
-
-  def _get_user(self, user):
-    if isinstance(user, basestring):
-      user = User.get_by_name(user, self.repo.path, self.repo.git)
-
-    if not isinstance(user, User) or not user:
-      message = 'We need an user object. Please see examples/repository'
-      raise ValueError(message)
-
-    return user
-
-  def _replace_in_repo(self, pattern, string):
-    with open(str(self.repo_config), 'r+') as f:
-      content = f.read()
-      content = re.sub(pattern, string, content)
-      f.seek(0)
-      f.write(content)
-      f.truncate()
-
+  @with_user
   def add(self, user, permission):
-    user = self._get_user(user)
+    if user.name in self.repo.users:
+      raise ValueError('User %s already exists. Please check '
+                       'example/repository.py in order to see how you can '
+                       'delete or change permissions' % user.name)
 
-    with open(str(self.repo_config), 'a+') as f:
-      # check if we have the user in repo
-      users = [item[1] for item in re.compile('=( *)(\w+)').findall(f.read())]
-      if user.name in users:
-        raise ValueError('User %s already exists. Please check '
-                         'example/repository.py in order to see how you can '
-                         'delete or change permissions' % user.name)
+    if set(map(lambda permission: permission.upper(), permission)) - \
+       ACCEPTED_PERMISSIONS != set([]):
+      raise ValueError('Invalid permissions. They must be from %s' %
+                       ACCEPTED_PERMISSIONS)
 
-      # check user's permissions
-      if set(map(lambda permission: permission.upper(), permission)) - \
-         ACCEPTED_PERMISSIONS != set([]):
-        raise ValueError('Invalid permissions. They must be from %s' %
-                         ACCEPTED_PERMISSIONS)
-      # add user to repo
-      f.write("    %s     =    %s\n" % (permission, user.name))
-      self.repo.git.commit(['conf'],
-                           'User %s added to repo %s with permissions: %s' %
-                           (user, self.repo.name, permission))
+    self.repo.write("    %s     =    %s\n" % (permission, user.name))
+
+    commit_message = 'User %s added to repo %s with permissions: %s' %\
+                     (user, self.repository_model.name, permission)
+    self.repository_model.git.commit(['conf'], commit_message)
 
     user.repos.append(self.repo)
     return user
 
+  @with_user
   def edit(self, user, permission):
-    user = self._get_user(user)
-
     pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
     string = r"\n    %s    =    %s" % (permission, user.name)
 
-    self._replace_in_repo(pattern, string)
+    self.repo.replace(pattern, string)
 
     self.repo.git.commit(['conf'],
                          "User %s has %s permission for repository %s" %
                          (user.name, permission, self.repo.name))
     return user
 
+  @with_user
   def remove(self, user):
-    user = self._get_user(user)
-
     pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
-    self._replace_in_repo(pattern, "")
+    self.repo.replace(pattern, "")
 
     self.repo.git.commit(['conf'],
                          "Deleted user %s from repository %s" %

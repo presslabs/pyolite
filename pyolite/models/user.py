@@ -16,7 +16,6 @@ class User(object):
 
   @classmethod
   def get_by_name(cls, name, path, git):
-
     # get user's keys
     key_path = Path(path, 'keydir')
     keys = [key for key in key_path.walk() if key.endswith('%s.pub' % name)]
@@ -36,6 +35,17 @@ class User(object):
       return cls(path, git, name, repos, keys)
     else:
       return None
+
+  @classmethod
+  def get(cls, user, path, git):
+    if isinstance(user, basestring):
+      user = User.get_by_name(user, path, git)
+
+    if not isinstance(user, User) or not user:
+      message = 'We need an user object. Please see examples/repository'
+      raise ValueError(message)
+
+    return user
 
   @property
   def is_admin(self):
