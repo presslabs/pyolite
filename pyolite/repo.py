@@ -17,7 +17,7 @@ class Repo(object):
   def users(self):
     users = []
 
-    with open(str(self.repo_config)) as f:
+    with open(str(self.path)) as f:
       config = f.read()
       for match in re.compile('=( *)(\w+)').finditer(config):
         users.append(match.group(2))
