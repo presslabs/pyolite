@@ -1,7 +1,7 @@
 from spec import Spec
 
-from mock import MagicMock, patch
-from nose.tools import eq_, raises
+from mock import MagicMock, patch, call
+from nose.tools import raises
 
 from pyolite.models.lists.users import ListUsers
 
@@ -48,31 +48,28 @@ class TestUserList(Spec):
                 'with permissions: RW+'
       mocked_repository.git.commit.assert_called_once_with(['conf'], message)
 
-  def test_user_permission_edit(self):
-    mocked_path = MagicMock()
-    mocked_re = MagicMock()
+  def test_user_removing(self):
+    mocked_repo = MagicMock()
     mocked_repository = MagicMock()
     mocked_user = MagicMock()
 
-    mocked_user.name = 'another_user'
-    mocked_user.__str__ = lambda x: 'another_user'
+    mock_single_user = MagicMock()
+    mock_single_user.name = 'another_user'
+    mock_single_user.__str__ = lambda x: 'another_user'
+
     mocked_repository.name = 'test_repo'
 
-    mocked_path.return_value = 'tests/fixtures/users.conf'
-    mocked_re.compile('=( *)(\w+)').findall.return_value = [(None, 'user')]
+    mocked_user.get.return_value = mock_single_user
+    mocked_repo.users = ['user']
 
     with patch.multiple('pyolite.models.lists.users',
-                        Path=mocked_path, re=mocked_re):
+                        Repo=MagicMock(return_value=mocked_repo),
+                        User=mocked_user):
       repo_users = ListUsers(mocked_repository)
-      repo_users.add('test', 'RW+')
+      repo_users.remove('test')
 
-      with open('tests/fixtures/users.conf', 'r+') as f:
-        content = f.read()
-        f.seek(0)
-        f.write('')
-        f.truncate()
+      pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % 'another_user'
+      mocked_repo.replace.assert_called_once_with(pattern, "")
 
-      eq_(content, "    RW+     =    another_user\n")
-      message = 'User another_user added to repo test_repo ' \
-                'with permissions: RW+'
-      mocked_repository.git.commit.assert_called_once_with(['conf'], message)
+      message = "Deleted user another_user from repository test_repo"
+      mocked_repository.git.commit.has_calls([call(['conf'], message)])
