@@ -17,7 +17,7 @@ class Repository(object):
       if obj.isdir():
         continue
 
-      with open(obj) as f:
+      with open(str(obj)) as f:
         if "repo %s" % lookup_repo in f.read():
           return cls(lookup_repo, path, git)
     return None
