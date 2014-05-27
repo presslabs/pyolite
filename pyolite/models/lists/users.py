@@ -1,4 +1,4 @@
-import Path
+from unipath import Path
 
 from pyolite.repo import Repo
 from pyolite.models.user import User
