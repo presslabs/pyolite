@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
 
 
-requires = ['GitPython', 'Unipath', 'argparse', 'async', 'coverage', 'gitdb',
-            'mock', 'nose', 'six', 'smmap', 'spec', 'wsgiref']
+requires = ['GitPython==0.3.2.RC1', 'Unipath==1.0', 'argparse==1.2.1',
+            'async==0.6.1', 'coverage==3.7.1', 'gitdb==0.5.4',
+            'mock==1.0.1', 'nose==1.3.3', 'six==1.6.1', 'smmap==0.8.2',
+            'spec==0.11.1', 'wsgiref==0.1.2']
 
 
 setup(name="pyolite",
-      version="1.0",
+      version="1.0.1",
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
