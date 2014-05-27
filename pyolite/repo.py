@@ -15,8 +15,10 @@ class Repo(object):
 
   @property
   def users(self):
-    users = []
+    if not self.path.exists():
+      return []
 
+    users = []
     with open(str(self.path)) as f:
       config = f.read()
       for match in re.compile('=( *)(\w+)').finditer(config):

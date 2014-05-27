@@ -1,3 +1,5 @@
+import Path
+
 from pyolite.repo import Repo
 from pyolite.models.user import User
 
@@ -8,7 +10,8 @@ ACCEPTED_PERMISSIONS = set('RW+CD')
 class ListUsers(object):
   def __init__(self, repository):
     self.repository_model = repository
-    self.repo = Repo(repository.path)
+    self.repo = Repo(Path(repository.path,
+                          "conf/repos/%s.conf" % repository.name))
 
   def with_user(func):
     def decorated(self, user, *args, **kwargs):
