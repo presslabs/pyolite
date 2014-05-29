@@ -9,10 +9,10 @@ class ListKeys(list):
     self.user = user
 
   def append(self, key):
-    key = Path(self.user.path, key)
+    key_path = Path(self.user.path, key)
 
-    if key.isfile():
-      with open(str(key)) as f:
+    if key_path.isfile():
+      with open(str(key_path)) as f:
         key = f.read()
 
     directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())

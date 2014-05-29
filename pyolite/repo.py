@@ -27,5 +27,5 @@ class Repo(object):
     return users
 
   def write(self, string):
-    with open(self.path, 'w') as f:
+    with open(self.path, 'a') as f:
       f.write(string)
