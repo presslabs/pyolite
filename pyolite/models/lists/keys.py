@@ -9,7 +9,7 @@ class ListKeys(list):
     self.user = user
 
   def append(self, key):
-    key_path = Path(self.user.path, key)
+    key_path = Path(key)
 
     if key_path.isfile():
       with open(str(key_path)) as f:
@@ -25,6 +25,19 @@ class ListKeys(list):
                          'Added new key for user %s' % self.user.name)
 
     super(ListKeys, self).append(key)
+
+  def remove(self, key):
+    if key not in self:
+      raise ValueError("Key is not in list")
+
+    directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
+
+    key_file = Path(directory, "%s.pub" % self.user.name)
+    try:
+      key_file.remove()
+      return True
+    except OSError:
+      return False
 
   def __add__(self, keys):
     for key in keys:

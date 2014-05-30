@@ -18,6 +18,8 @@ vlad = olite.users.get_or_create('alice')
 vlad.keys.append('/path/to/key')
 vlad.keys.append('just put the key here')
 
+vlad.keys.remove("my awesome key")
+
 # check if user is admin or not
 print vlad.is_admin
 
