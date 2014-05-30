@@ -50,7 +50,7 @@ class ListUsers(object):
 
     self.repo.git.commit(['conf'],
                          "User %s has %s permission for repository %s" %
-                         (user.name, permission, self.repo.name))
+                         (user.name, permission, self.repository_model.name))
     return user
 
   @with_user
@@ -60,7 +60,7 @@ class ListUsers(object):
 
     self.repo.git.commit(['conf'],
                          "Deleted user %s from repository %s" %
-                         (user.name, self.repo.name))
+                         (user.name, self.repository_model.name))
 
   def __iter__(self):
     for user in self._user:

@@ -25,6 +25,10 @@ class TestRepo(TestCase):
 
   def test_it_should_retrieve_all_users_from_repo(self):
     path = 'tests/fixtures/repo_users.conf'
+    mocked_path = MagicMock()
+    mocked_path.__str__ = lambda x: path
+
+    mocked_path.exists.return_value = True
 
     mocked_re = MagicMock()
     mocked_user1 = MagicMock()
@@ -36,7 +40,7 @@ class TestRepo(TestCase):
     mocked_user2.group.return_value = 'user2'
 
     with patch.multiple('pyolite.repo', re=mocked_re):
-      repo = Repo(path)
+      repo = Repo(mocked_path)
       eq_(repo.users, ['user1', 'user2'])
 
   def test_it_shoujld_write_to_repo_config(self):

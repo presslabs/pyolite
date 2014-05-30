@@ -12,6 +12,9 @@ class TestUserList(Spec):
     mocked_repository = MagicMock()
     mocked_user = MagicMock()
 
+    mocked_repository.name = 'test_repo'
+    mocked_repository.path = 'path'
+
     mocked_user.get.return_value = MagicMock(name='another_user')
     mocked_repo.users = ['another_user']
 
@@ -25,6 +28,9 @@ class TestUserList(Spec):
     mocked_repo = MagicMock()
     mocked_repository = MagicMock()
     mocked_user = MagicMock()
+
+    mocked_repository.name = 'test_repo'
+    mocked_repository.path = 'path'
 
     mocked_user.get.return_value = MagicMock(name='another_user')
     mocked_repo.users = ['user']
@@ -44,6 +50,7 @@ class TestUserList(Spec):
     mock_single_user.__str__ = lambda x: 'another_user'
 
     mocked_repository.name = 'test_repo'
+    mocked_repository.path = 'path'
 
     mocked_user.get.return_value = mock_single_user
     mocked_repo.users = ['user']
@@ -71,6 +78,7 @@ class TestUserList(Spec):
     mock_single_user.__str__ = lambda x: 'another_user'
 
     mocked_repository.name = 'test_repo'
+    mocked_repository.path = 'path'
 
     mocked_user.get.return_value = mock_single_user
     mocked_repo.users = ['user']
@@ -97,6 +105,7 @@ class TestUserList(Spec):
     mock_single_user.__str__ = lambda x: 'another_user'
 
     mocked_repository.name = 'test_repo'
+    mocked_repository.path = 'path'
 
     mocked_user.get.return_value = mock_single_user
     mocked_repo.users = ['user']
