@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mock import MagicMock, patch
+from mock import MagicMock, patch, call
 from nose.tools import raises, eq_
 
 from pyolite.git import Git
@@ -38,10 +38,12 @@ class TestGit(TestCase):
       commit_message = 'simple commit message'
 
       git.commit(objects, commit_message)
+      git.commit(objects, commit_message, action='remove')
 
     mock_index.add.assert_called_once_with(objects)
-    mock_index.commit.assert_called_once_with(commit_message)
+    mock_index.remove.assert_called_once_with(objects)
+    mock_index.commit.has_calls([call(commit_message), call(commit_message)])
 
-    eq_(mock_remotes.fetch.call_count, 1)
-    eq_(mock_remotes.pull.call_count, 1)
-    eq_(mock_remotes.push.call_count, 1)
+    eq_(mock_remotes.fetch.call_count, 2)
+    eq_(mock_remotes.pull.call_count, 2)
+    eq_(mock_remotes.push.call_count, 2)
