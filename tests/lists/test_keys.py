@@ -50,3 +50,34 @@ class TestKeyList(TestCase):
         call('first_key'),
         call('second_key'),
     ])
+
+  def test_list_remove(self):
+    key = "my_awesome_key"
+
+    mock_file = MagicMock()
+    mock_file.__str__ = lambda x: key
+    mock_file.exists.return_value = True
+    mock_path = MagicMock(return_value=mock_file)
+
+    mock_hashlib = MagicMock()
+    mock_hashlib.md5.hexdigest.return_value = "HASH"
+
+    mock_user = MagicMock()
+    mock_user.path = "path"
+    mock_user.name = "test"
+
+    with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
+                        hashlib=mock_hashlib):
+      keys = ListKeys(mock_user)
+
+      keys.remove(key)
+
+      mock_path.has_calls([
+          call("path", 'keydir', 'HASH'),
+          call(mock_file, "test.pub"),
+      ])
+
+      commit_message = "Removed key for user test"
+      mock_user.git.commit.has_calls([call(["my_awesome_key"],
+                                           commit_message,
+                                           action='remove')])
