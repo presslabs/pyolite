@@ -30,6 +30,7 @@ class ListKeys(list):
     directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
     key_file = Path(directory, "%s.pub" % self.user.name)
 
+    print key_file
     if not key_file.exists():
       raise ValueError("Invalid key")
 
