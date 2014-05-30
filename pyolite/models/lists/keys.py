@@ -27,17 +27,21 @@ class ListKeys(list):
     super(ListKeys, self).append(key)
 
   def remove(self, key):
-    if key not in self:
-      raise ValueError("Key is not in list")
-
     directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
-
     key_file = Path(directory, "%s.pub" % self.user.name)
+
+    if not key_file.exists():
+      raise ValueError("Invalid key")
+
     try:
       key_file.remove()
-      return True
     except OSError:
       return False
+
+    self.user.git.commit([str(key_file)],
+                         'Removed key for user %s' % self.user.name,
+                         action='remove')
+    return True
 
   def __add__(self, keys):
     for key in keys:
