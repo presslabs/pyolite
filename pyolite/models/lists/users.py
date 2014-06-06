@@ -19,7 +19,8 @@ class ListUsers(object):
         user = User.get(string_user, self.repository_model.path,
                         self.repository_model.git)
       except ValueError:
-        user = string_user
+        user = User(self.repository_model.path, self.repository_model.git,
+                    string_user)
 
       return func(self, user, *args, **kwargs)
     return decorated
