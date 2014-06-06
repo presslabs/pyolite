@@ -77,4 +77,4 @@ class ListUsers(object):
       self.append(item)
 
   def __str__(self):
-    return "['%s']" % ', '.join(self._users)
+    return "['%s']" % ', '.join(self.repo.users)

@@ -36,8 +36,7 @@ class ListKeys(list):
     key_file.remove()
 
     self.user.git.commit([str(key_file)],
-                         'Removed key for user %s' % self.user.name,
-                         action='remove')
+                         'Removed key for user %s' % self.user.name)
 
   def __add__(self, keys):
     for key in keys:

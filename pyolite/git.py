@@ -1,29 +1,26 @@
 from __future__ import absolute_import
+import os
 
-from git import Repo
+from sh import git
 
 
 class Git(object):
-  def __init__(self, repo, remote='origin'):
-    self.repo = Repo(repo)
-    self.index = self.repo.index
-    self.remote = getattr(self.repo.remotes, remote)
+  def __init__(self, repo):
+    self.repo = repo
 
-  def commit(self, objects, message, action='add'):
+  def commit(self, objects, message):
     # validate commit message
     if not message or not isinstance(message, basestring):
       raise ValueError("Commit message should not be empty or not string")
 
-    # create the commit
-    if action == 'add':
-      self.index.add(objects)
+    os.chdir(self.repo)
 
-    if action == 'remove':
-      self.index.remove(objects)
+    for obj in objects:
+      git.add("-A", obj)
 
-    self.index.commit(message)
+    git.commit("-m", message)
 
     # fetch, pull and push from and to the remote
-    self.remote.fetch()
-    self.remote.pull()
-    self.remote.push()
+    git.fetch()
+    git.pull()
+    git.push()
