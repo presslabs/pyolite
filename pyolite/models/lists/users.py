@@ -14,9 +14,13 @@ class ListUsers(object):
                           "conf/repos/%s.conf" % repository.name))
 
   def with_user(func):
-    def decorated(self, user, *args, **kwargs):
-      user = User.get(user, self.repository_model.path,
-                      self.repository_model.git)
+    def decorated(self, string_user, *args, **kwargs):
+      try:
+        user = User.get(string_user, self.repository_model.path,
+                        self.repository_model.git)
+      except ValueError:
+        user = string_user
+
       return func(self, user, *args, **kwargs)
     return decorated
 
