@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 
+from pyolite import __version__
+
 
 requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
             'async==0.6.1', 'coverage==3.7.1', 'gitdb==0.5.4',
@@ -8,7 +10,7 @@ requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
 
 
 setup(name="pyolite",
-      version="1.1.1",
+      version=__version__,
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
