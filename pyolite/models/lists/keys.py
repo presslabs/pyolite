@@ -34,6 +34,7 @@ class ListKeys(list):
       raise ValueError("Invalid key")
 
     key_file.remove()
+    key_file.parent.rmdir()
 
     self.user.git.commit([str(key_file)],
                          'Removed key for user %s' % self.user.name)
