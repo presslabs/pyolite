@@ -15,8 +15,9 @@ class ListKeys(list):
       with open(str(key_path)) as f:
         key = f.read()
 
-    directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
-    directory.mkdir()
+    directory = Path(self.user.path, 'keydir', self.user.name,
+                     hashlib.md5(key).hexdigest())
+    directory.mkdir(parents=True)
 
     key_file = Path(directory, "%s.pub" % self.user.name)
     key_file.write_file(key)
@@ -27,7 +28,8 @@ class ListKeys(list):
     super(ListKeys, self).append(key)
 
   def remove(self, key):
-    directory = Path(self.user.path, 'keydir', hashlib.md5(key).hexdigest())
+    directory = Path(self.user.path, 'keydir', self.user.name,
+                     hashlib.md5(key).hexdigest())
     key_file = Path(directory, "%s.pub" % self.user.name)
 
     if not key_file.exists():
@@ -36,7 +38,7 @@ class ListKeys(list):
     key_file.remove()
     key_file.parent.rmdir()
 
-    self.user.git.commit([str(key_file)],
+    self.user.git.commit(['keydir'],
                          'Removed key for user %s' % self.user.name)
 
   def __add__(self, keys):
