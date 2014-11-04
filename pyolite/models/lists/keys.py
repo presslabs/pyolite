@@ -16,7 +16,7 @@ class ListKeys(list):
         key = f.read()
 
     directory = Path(self.user.path, 'keydir', self.user.name,
-                     hashlib.md5(key).hexdigest())
+                     hashlib.md5(key.strip().split()[1]).hexdigest())
     directory.mkdir(parents=True)
 
     key_file = Path(directory, "%s.pub" % self.user.name)
@@ -29,7 +29,7 @@ class ListKeys(list):
 
   def remove(self, key):
     directory = Path(self.user.path, 'keydir', self.user.name,
-                     hashlib.md5(key).hexdigest())
+                     hashlib.md5(key.strip().split()[1]).hexdigest())
     key_file = Path(directory, "%s.pub" % self.user.name)
 
     if not key_file.exists():
