@@ -15,12 +15,12 @@ class Git(object):
 
     os.chdir(self.repo)
 
+    # pull and push from and to the remote
+    git.pull()
+
     for obj in objects:
       git.add("-A", obj)
 
     git.commit("-m", message)
 
-    # fetch, pull and push from and to the remote
-    git.fetch()
-    git.pull()
     git.push()
