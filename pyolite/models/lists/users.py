@@ -53,7 +53,7 @@ class ListUsers(object):
 
     self.repo.replace(pattern, string)
 
-    self.repo.git.commit(['conf'],
+    self.repository_model.git.commit(['conf'],
                          "User %s has %s permission for repository %s" %
                          (user.name, permission, self.repository_model.name))
     return user
@@ -63,7 +63,7 @@ class ListUsers(object):
     pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
     self.repo.replace(pattern, "")
 
-    self.repo.git.commit(['conf'],
+    self.repository_model.git.commit(['conf'],
                          "Deleted user %s from repository %s" %
                          (user.name, self.repository_model.name))
 
