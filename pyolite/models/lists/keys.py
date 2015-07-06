@@ -15,6 +15,9 @@ class ListKeys(list):
       with open(str(key_path)) as f:
         key = f.read()
 
+    if key in self:
+        return
+
     directory = Path(self.user.path, 'keydir', self.user.name,
                      hashlib.md5(key.strip().split()[1]).hexdigest())
     directory.mkdir(parents=True)
