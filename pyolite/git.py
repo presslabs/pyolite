@@ -13,14 +13,21 @@ class Git(object):
     if not message or not isinstance(message, basestring):
       raise ValueError("Commit message should not be empty or not string")
 
-    os.chdir(self.repo)
+    env = os.environ.copy()
+    env.update({
+        'GIT_WORK_TREE': self.repo,
+        'GIT_DIR': '%s/.git' % self.repo,
+    })
+
+    git.gc("--prune", _env=env)
+    git.checkout("HEAD", _env=env)
 
     # pull and push from and to the remote
-    git.pull()
+    git.pull("origin", "master", _env=env)
 
     for obj in objects:
-      git.add("-A", obj)
+      git.add("-A", obj, _env=env)
 
-    git.commit("-m", message)
+    git.commit("-m", message, _env=env)
 
-    git.push()
+    git.push(_env=env)
