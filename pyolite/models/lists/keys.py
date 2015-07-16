@@ -23,6 +23,9 @@ class ListKeys(list):
     directory.mkdir(parents=True)
 
     key_file = Path(directory, "%s.pub" % self.user.name)
+    if key_file.exists() and key_file.read_file() == key:
+        return
+
     key_file.write_file(key)
 
     self.user.git.commit(['keydir'],
