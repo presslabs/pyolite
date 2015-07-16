@@ -8,7 +8,7 @@ requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
 
 
 setup(name="pyolite",
-      version="1.3.5",
+      version="1.3.6",
       platforms='any',
       packages=find_packages(),
       include_package_data=True,

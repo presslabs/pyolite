@@ -28,6 +28,9 @@ class Git(object):
     for obj in objects:
       git.add("-A", obj, _env=env)
 
-    git.commit("-m", message, _env=env)
+    try:
+      git.commit("-m", message, _env=env)
+    except Exception:
+      pass
 
     git.push(_env=env)
