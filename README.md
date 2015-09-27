@@ -6,6 +6,30 @@ Easy and simple to user, just `pip install pyolite` and boom!!!
 
 Using an intuitive API, `pyolite` help you easly create users and repos using `gitolite`.
 
+## Gitolite Setup Prereqs
+
+Using Pyolite is very easy, but requires some initial set up. First, your **gitolite-admin** repo must contain a directory called `repos`, and all `.conf` files in this directory should be included in your `gitolite.conf` file. For example, your **gitolite-admin** repo might have the following structure:
+
+```
+├── gitolite.conf
+└── repos
+    └── [ empty ]
+```
+
+And your `gitolite.conf` file might look like this:
+
+```
+repo gitolite-admin
+    RW+     =   admin
+
+repo testing
+    RW+     =   @all
+
+include	    "repos/*.conf"
+```
+
+This is required because Pyolite makes changes to files only inside the **repos** directory.
+
 ### Repository API
 
 First, we need to initialize a `pyolite` object with the path to `gitolite`'s repository.
