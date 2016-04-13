@@ -1,6 +1,3 @@
-# Fork by bcersows
-Trying to implement repos.all() and deleting elements.
-
 pyolite [![Build Status](https://travis-ci.org/PressLabs/svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.png)](https://coveralls.io/r/PressLabs/pyolite) [![Downloads](https://pypip.in/d/pyolite/badge.png)](https://crate.io/packages/pyolite/)
 =======
 # Python wrapper for gitolite
@@ -105,6 +102,10 @@ vlad.keys.append('just put the key here')
 
 # check if user is admin or not
 print vlad.is_admin
+
+# delete a user by name
+deleted_user = olite.users.delete('username')
+print deleted_user
 ```
 
 If you need any help with this module, write me `vlad@presslabs.com`
