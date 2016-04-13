@@ -1,7 +1,7 @@
+import re
 from unipath import Path
 
 from models.repository import Repository
-
 from .manager import Manager
 
 
@@ -35,9 +35,9 @@ class RepositoryManager(Manager):
       if obj.isdir():
         continue
 
-      files = re.compile('(\w+.conf)').findall(str(obj))
+      files = re.compile('(\w+.conf$)').findall(str(obj))
       if files:
         repos += files
 
-    return [Repo.get_by_name(repo[:-5], self.path, self.git)
+    return [Repository.get_by_name(repo[:-5], self.path, self.git)
             for repo in set(repos)]
