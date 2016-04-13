@@ -36,6 +36,7 @@ This is required because Pyolite makes changes to files only inside the **repos*
 ### Repository API
 
 First, we need to initialize a `pyolite` object with the path to `gitolite`'s repository.
+
 ```python
 from pyolite import Pyolite
 
@@ -45,14 +46,21 @@ olite = Pyolite(admin_repository=admin_repository)
 ```
 
 After that, we can create and get a repo using `create` and `get` methods.
+
 ```python
 # create a repo
 repo = olite.repos.get('my_repo')
 repo = olite.repos.create('ydo')
 repo = olite.repos.get_or_create('second_repo')
+
+# List existing Pyolite repos
+repos = olite.repos.all()
+for repo_it in repos:
+  print repo_it.name
 ```
 
 Every repo has an `users` object, in order to facilitate basic operations: adding, editing and removing users from a repository.
+
 ```python
 print "Repo's users: %s" % repo.users
 
