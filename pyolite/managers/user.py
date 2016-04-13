@@ -20,6 +20,8 @@ class UserManager(Manager):
   def delete(self, name):
     user = User(self.path, self.git, name)
     dest = Path(self.path, 'keydir/%s' % name)
+    if not dest.exists():
+      raise ValueError('Repository %s not existing.' % lookup_repo_name)
     dest.rmtree()
     self.git.commit([str(dest)], 'Deleted user %s.' % name)
     
