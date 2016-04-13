@@ -1,4 +1,5 @@
 import re
+import shutil
 from unipath import Path
 
 from models.repository import Repository
@@ -26,6 +27,10 @@ class RepositoryManager(Manager):
     self.git.commit([str(repo_file)], 'Created repo %s' % lookup_repo)
 
     return Repository(lookup_repo, self.path, self.git)
+
+  def delete(self, lookup_repo_name):
+    dest = Path(self.path, 'conf/repos/%s.conf' % lookup_repo_name)
+    shutil.rmtree(dest, ignore_errors=True)
 
   def all(self):
     repos = []

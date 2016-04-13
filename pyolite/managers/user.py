@@ -18,6 +18,10 @@ class UserManager(Manager):
   def get(self, name):
     return User.get_by_name(name, self.path, self.git)
 
+  def delete(self, name):
+    dest = Path(self.path, 'keydir/%s' % name)
+    shutil.rmtree(dest, ignore_errors=True)
+
   def all(self):
     users = []
     key_dir = Path(self.path, 'keydir')
