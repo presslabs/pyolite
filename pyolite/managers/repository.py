@@ -26,3 +26,18 @@ class RepositoryManager(Manager):
     self.git.commit([str(repo_file)], 'Created repo %s' % lookup_repo)
 
     return Repository(lookup_repo, self.path, self.git)
+
+  def all(self):
+    repos = []
+    repo_dir = Path(self.path, 'conf/repos')
+
+    for obj in repo_dir.walk():
+      if obj.isdir():
+        continue
+
+      files = re.compile('(\w+.pub)').findall(str(obj))
+      if files:
+        repos += files
+
+    return [Repo.get_by_name(repo[:-5], self.path, self.git)
+            for repo in set(repos)]
