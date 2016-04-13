@@ -29,8 +29,12 @@ class RepositoryManager(Manager):
     return Repository(lookup_repo, self.path, self.git)
 
   def delete(self, lookup_repo_name):
+    repo = Repository(lookup_repo_name, self.path, self.git)
     dest = Path(self.path, 'conf/repos/%s.conf' % lookup_repo_name)
     shutil.rmtree(dest, ignore_errors=True)
+	self.git.commit([str(dest)], 'Deleted repo %s.' % lookup_repo_name)
+
+    return repo
 
   def all(self):
     repos = []
