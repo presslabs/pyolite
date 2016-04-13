@@ -1,7 +1,7 @@
 from nose.tools import eq_
 from mock import MagicMock, patch
 
-from pyolite.models.repository import Repository
+from models.repository import Repository
 
 
 class TestRepositoryModel(object):
@@ -17,7 +17,7 @@ class TestRepositoryModel(object):
 
     mocked_path.walk.return_value = [mocked_file, mocked_dir]
 
-    with patch.multiple('pyolite.models.repository',
+    with patch.multiple('models.repository',
                         Path=MagicMock(return_value=mocked_path),
                         ListUsers=MagicMock(return_value=mocked_users)):
       repo = Repository.get_by_name('new_one', 'simple_path', 'git')
@@ -36,7 +36,7 @@ class TestRepositoryModel(object):
 
     mocked_path.walk.return_value = [mocked_dir]
 
-    with patch.multiple('pyolite.models.repository',
+    with patch.multiple('models.repository',
                         Path=MagicMock(return_value=mocked_path),
                         ListUsers=MagicMock(return_value=mocked_users)):
       repo = Repository.get_by_name('new_one', 'simple_path', 'git')

@@ -1,6 +1,6 @@
 from unipath import Path
 
-from pyolite.models.repository import Repository
+from models.repository import Repository
 
 from .manager import Manager
 
@@ -35,7 +35,7 @@ class RepositoryManager(Manager):
       if obj.isdir():
         continue
 
-      files = re.compile('(\w+.pub)').findall(str(obj))
+      files = re.compile('(\w+.conf)').findall(str(obj))
       if files:
         repos += files
 

@@ -3,7 +3,7 @@ from unittest import TestCase
 from mock import patch, MagicMock, call
 from nose.tools import eq_
 
-from pyolite.models.lists import ListKeys
+from models.lists import ListKeys
 
 
 class TestKeyList(TestCase):
@@ -21,7 +21,7 @@ class TestKeyList(TestCase):
     mock_user.path = "path"
     mock_user.name = "test"
 
-    with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
+    with patch.multiple('models.lists.keys', Path=mock_path,
                         hashlib=mock_hashlib):
       keys = ListKeys(mock_user)
 
@@ -66,7 +66,7 @@ class TestKeyList(TestCase):
     mock_user.path = "path"
     mock_user.name = "test"
 
-    with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
+    with patch.multiple('models.lists.keys', Path=mock_path,
                         hashlib=mock_hashlib):
       keys = ListKeys(mock_user)
 
