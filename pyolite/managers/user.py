@@ -1,5 +1,4 @@
 import re
-
 from unipath import Path
 
 from models.user import User
@@ -21,10 +20,10 @@ class UserManager(Manager):
   def delete(self, name):
     user = User(self.path, self.git, name)
     dest = Path(self.path, 'keydir/%s' % name)
-    shutil.rmtree(dest, ignore_errors=True)
-	self.git.commit([str(dest)], 'Deleted user %s.' % name)
-	
-	return user
+    dest.rmtree()
+    self.git.commit([str(dest)], 'Deleted user %s.' % name)
+    
+    return user
 
   def all(self):
     users = []

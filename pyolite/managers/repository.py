@@ -1,5 +1,4 @@
 import re
-import shutil
 from unipath import Path
 
 from models.repository import Repository
@@ -31,8 +30,8 @@ class RepositoryManager(Manager):
   def delete(self, lookup_repo_name):
     repo = Repository(lookup_repo_name, self.path, self.git)
     dest = Path(self.path, 'conf/repos/%s.conf' % lookup_repo_name)
-    shutil.rmtree(dest, ignore_errors=True)
-	self.git.commit([str(dest)], 'Deleted repo %s.' % lookup_repo_name)
+    dest.remove()
+    self.git.commit([str(dest)], 'Deleted repo %s.' % lookup_repo_name)
 
     return repo
 
