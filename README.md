@@ -1,4 +1,4 @@
-pyolite [![Build Status](https://travis-ci.org/PressLabs/pyolite.svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.png)](https://coveralls.io/r/PressLabs/pyolite) [![Downloads](https://pypip.in/d/pyolite/badge.png)](https://crate.io/packages/pyolite/)
+pyolite [![Build Status](https://travis-ci.org/PressLabs/svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.png)](https://coveralls.io/r/PressLabs/pyolite) [![Downloads](https://pypip.in/d/pyolite/badge.png)](https://crate.io/packages/pyolite/)
 =======
 # Python wrapper for gitolite
 
@@ -33,6 +33,7 @@ This is required because Pyolite makes changes to files only inside the **repos*
 ### Repository API
 
 First, we need to initialize a `pyolite` object with the path to `gitolite`'s repository.
+
 ```python
 from pyolite import Pyolite
 
@@ -42,16 +43,26 @@ olite = Pyolite(admin_repository=admin_repository)
 ```
 
 After that, we can create and get a repo using `create` and `get` methods.
+
 ```python
 # create a repo
 repo = olite.repos.get('my_repo')
 repo = olite.repos.create('ydo')
 repo = olite.repos.get_or_create('second_repo')
+
+# List existing Pyolite repos
+repos = olite.repos.all()
+for repo_it in repos:
+  print repo_it.name
 ```
 
 Every repo has an `users` object, in order to facilitate basic operations: adding, editing and removing users from a repository.
+
 ```python
 print "Repo's users: %s" % repo.users
+
+# list a repo's users
+users_as_list = repo.users.list()
 
 user = olite.users.create(name='bob', key_path="~/.ssh/third_rsa.pub")
 
@@ -94,6 +105,14 @@ vlad.keys.append('just put the key here')
 
 # check if user is admin or not
 print vlad.is_admin
+
+# list user's keys and repos
+keys_as_list = vlad.list_keys()
+repos_as_list = vlad.list_repos()
+
+# delete a user by name
+deleted_user = olite.users.delete('username')
+print deleted_user
 ```
 
 If you need any help with this module, write me `vlad@presslabs.com`

@@ -3,7 +3,7 @@ from unittest import TestCase
 from mock import MagicMock, patch
 from nose.tools import eq_
 
-from pyolite.repo import Repo
+from repo import Repo
 
 
 class TestRepo(TestCase):
@@ -13,7 +13,7 @@ class TestRepo(TestCase):
 
     mocked_re.sub.return_value = 'another_text'
 
-    with patch.multiple('pyolite.repo', re=mocked_re):
+    with patch.multiple('repo', re=mocked_re):
       repo = Repo(path)
       repo.replace('pattern', 'string')
 
@@ -39,7 +39,7 @@ class TestRepo(TestCase):
     mocked_user1.group.return_value = 'user1'
     mocked_user2.group.return_value = 'user2'
 
-    with patch.multiple('pyolite.repo', re=mocked_re):
+    with patch.multiple('repo', re=mocked_re):
       repo = Repo(mocked_path)
       eq_(repo.users, ['user1', 'user2'])
 

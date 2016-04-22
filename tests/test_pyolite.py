@@ -11,10 +11,10 @@ class TestPyolite(TestCase):
     mocked_repository = MagicMock()
     mocked_user = MagicMock()
 
-    with patch.multiple('pyolite.pyolite', RepositoryManager=mocked_repository,
+    with patch.multiple('pyolite', RepositoryManager=mocked_repository,
                         UserManager=mocked_user):
       pyolite = Pyolite('my_repo')
 
-      eq_(pyolite.admin_repository, 'my_repo')
+      eq_(admin_repository, 'my_repo')
       mocked_repository.assert_called_once_with('my_repo')
       mocked_user.assert_called_once_with('my_repo')

@@ -1,9 +1,8 @@
 import re
-
 from unipath import Path
 
-from pyolite.models.user import User
-from pyolite.managers.manager import Manager
+from models.user import User
+from managers.manager import Manager
 
 
 class UserManager(Manager):
@@ -17,6 +16,16 @@ class UserManager(Manager):
 
   def get(self, name):
     return User.get_by_name(name, self.path, self.git)
+
+  def delete(self, name):
+    user = User(self.path, self.git, name)
+    dest = Path(self.path, 'keydir/%s' % name)
+    if not dest.exists():
+      raise ValueError('Repository %s not existing.' % name)
+    dest.rmtree()
+    self.git.commit([str(dest)], 'Deleted user %s.' % name)
+    
+    return user
 
   def all(self):
     users = []

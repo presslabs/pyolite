@@ -3,7 +3,7 @@ from unittest import TestCase
 from nose.tools import raises, eq_
 from mock import MagicMock, patch
 
-from pyolite.managers.manager import Manager
+from managers.manager import Manager
 
 
 class TestManager(TestCase):
@@ -15,10 +15,10 @@ class TestManager(TestCase):
 
     mocked_path.isdir.return_value = False
 
-    with patch.multiple('pyolite.managers.manager',
+    with patch.multiple('managers.manager',
                         Path=MagicMock(return_value=mocked_path),
                         Git=MagicMock(return_value=mocked_git)):
-      with patch.multiple('pyolite.managers.manager.Manager',
+      with patch.multiple('managers.manager.Manager',
                           __abstractmethods__=set()):
 
         Manager('/path/to/repo')
@@ -33,10 +33,10 @@ class TestManager(TestCase):
     Manager.get = mocked_get
     Manager.create = mocked_create
 
-    with patch.multiple('pyolite.managers.manager',
+    with patch.multiple('managers.manager',
                         Path=MagicMock(return_value=mocked_path),
                         Git=MagicMock(return_value=mocked_git)):
-      with patch.multiple('pyolite.managers.manager.Manager',
+      with patch.multiple('managers.manager.Manager',
                           __abstractmethods__=set()):
 
         manager = Manager('/path/to/admin/repo')
@@ -49,10 +49,10 @@ class TestManager(TestCase):
     mocked_path = MagicMock()
     mocked_git = MagicMock()
 
-    with patch.multiple('pyolite.managers.manager',
+    with patch.multiple('managers.manager',
                         Path=MagicMock(return_value=mocked_path),
                         Git=MagicMock(return_value=mocked_git)):
-      with patch.multiple('pyolite.managers.manager.Manager',
+      with patch.multiple('managers.manager.Manager',
                           __abstractmethods__=set()):
 
         manager = Manager('/path/to/admin/repo')
@@ -63,10 +63,10 @@ class TestManager(TestCase):
     mocked_path = MagicMock()
     mocked_git = MagicMock()
 
-    with patch.multiple('pyolite.managers.manager',
+    with patch.multiple('managers.manager',
                         Path=MagicMock(return_value=mocked_path),
                         Git=MagicMock(return_value=mocked_git)):
-      with patch.multiple('pyolite.managers.manager.Manager',
+      with patch.multiple('managers.manager.Manager',
                           __abstractmethods__=set()):
 
         manager = Manager('/path/to/admin/repo')

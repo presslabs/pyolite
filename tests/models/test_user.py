@@ -3,7 +3,7 @@ from unittest import TestCase
 from mock import MagicMock, patch, call
 from nose.tools import eq_, raises
 
-from pyolite.models.user import User
+from models.user import User
 
 
 class TestUserModel(TestCase):
@@ -30,7 +30,7 @@ class TestUserModel(TestCase):
   def test_if_a_user_can_be_retrieved_by_name(self):
     mocks = self.set_mocks()
 
-    with patch.multiple('pyolite.models.user', Path=mocks['path'],
+    with patch.multiple('models.user', Path=mocks['path'],
                         ListKeys=mocks['keys']):
 
       user = User(mocks['initial_path'], mocks['git'], 'vtemian', [],
@@ -55,7 +55,7 @@ class TestUserModel(TestCase):
   def test_if_user_is_admin(self):
     mocks = self.set_mocks()
 
-    with patch.multiple('pyolite.models.user', Path=mocks['path'],
+    with patch.multiple('models.user', Path=mocks['path'],
                         ListKeys=mocks['keys']):
 
       user = User(mocks['initial_path'], mocks['git'], 'vtemian', [],
@@ -69,6 +69,6 @@ class TestUserModel(TestCase):
   def test_get_user_by_nothing_it_should_raise_value_error(self):
     mocks = self.set_mocks()
 
-    with patch.multiple('pyolite.models.user', Path=mocks['path'],
+    with patch.multiple('models.user', Path=mocks['path'],
                         ListKeys=mocks['keys']):
       User.get(MagicMock(), mocks['git'], mocks['path'])

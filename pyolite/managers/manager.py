@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 
 from unipath import Path
 
-from pyolite.git import Git
+from git import Git
 
 
 class Manager(object):
@@ -26,3 +26,7 @@ class Manager(object):
   @abstractmethod
   def create(self, entity):
     raise NotImplementedError("Each manager needs a create method")
+
+  @abstractmethod
+  def delete(self, entity_name):
+    raise NotImplementedError("Each manager needs a delete method")

@@ -4,7 +4,7 @@ from mock import MagicMock, patch, call
 from nose.tools import eq_, raises
 
 from tests.mocked_manager import MockManager, mocked_git, mocked_path
-from pyolite.managers.repository import RepositoryManager
+from managers.repository import RepositoryManager
 
 
 class TestRepositoryManager(TestCase):
@@ -13,7 +13,7 @@ class TestRepositoryManager(TestCase):
     mocked_repository.get_by_name.return_value = 'my_repo'
 
     RepositoryManager.__bases__ = (MockManager, )
-    with patch.multiple('pyolite.managers.repository',
+    with patch.multiple('managers.repository',
                         Repository=mocked_repository):
 
       repos = RepositoryManager('/path/to/admin/repo/')
@@ -33,7 +33,7 @@ class TestRepositoryManager(TestCase):
     mocked_file.exists.return_value = True
 
     RepositoryManager.__bases__ = (MockManager, )
-    with patch.multiple('pyolite.managers.repository',
+    with patch.multiple('managers.repository',
                         Path=mocked_path,
                         Repository=mocked_repository):
       repos = RepositoryManager('/path/to/admin/repo/')
@@ -52,7 +52,7 @@ class TestRepositoryManager(TestCase):
 
     RepositoryManager.__bases__ = (MockManager, )
 
-    with patch.multiple('pyolite.managers.repository',
+    with patch.multiple('managers.repository',
                         Path=mocked_path,
                         Repository=mocked_repository):
       repos = RepositoryManager('/path/to/admin/repo/')

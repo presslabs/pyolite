@@ -1,7 +1,7 @@
+import re
 from unipath import Path
 
-from pyolite.models.repository import Repository
-
+from models.repository import Repository
 from .manager import Manager
 
 
@@ -26,3 +26,28 @@ class RepositoryManager(Manager):
     self.git.commit([str(repo_file)], 'Created repo %s' % lookup_repo)
 
     return Repository(lookup_repo, self.path, self.git)
+
+  def delete(self, lookup_repo_name):
+    repo = Repository(lookup_repo_name, self.path, self.git)
+    dest = Path(self.path, 'conf/repos/%s.conf' % lookup_repo_name)
+    if not dest.exists():
+      raise ValueError('Repository %s not existing.' % lookup_repo_name)
+    dest.remove()
+    self.git.commit([str(dest)], 'Deleted repo %s.' % lookup_repo_name)
+
+    return repo
+
+  def all(self):
+    repos = []
+    repo_dir = Path(self.path, 'conf/repos')
+
+    for obj in repo_dir.walk():
+      if obj.isdir():
+        continue
+
+      files = re.compile('(\w+.conf$)').findall(str(obj))
+      if files:
+        repos += files
+
+    return [Repository.get_by_name(repo[:-5], self.path, self.git)
+            for repo in set(repos)]

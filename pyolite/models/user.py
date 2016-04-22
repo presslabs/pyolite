@@ -1,6 +1,6 @@
 from unipath import Path
 
-from pyolite.models.lists import ListKeys
+from models.lists import ListKeys
 
 
 class User(object):
@@ -53,6 +53,21 @@ class User(object):
       if 'gitolite.conf' in repo:
         return True
     return False
+
+  def list_keys(self):
+    keys = []
+    for key in self.keys:
+      if key.isfile():
+        with open(str(key)) as f:
+          cont = f.read()
+      keys.append({"name":key, "key":cont.replace("\n","")})
+    return keys
+
+  def list_repos(self):
+    repos = []
+    for repo in self.repos:
+      repos.append(repo.name.replace(".conf", ""))
+    return repos
 
   def __str__(self):
     return "< %s >" % self.name

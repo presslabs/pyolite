@@ -1,7 +1,8 @@
 from unipath import Path
+import re
 
-from pyolite.repo import Repo
-from pyolite.models.user import User
+from repo import Repo
+from models.user import User
 
 
 ACCEPTED_PERMISSIONS = set('RW+CD')
@@ -48,7 +49,7 @@ class ListUsers(object):
 
   @with_user
   def edit(self, user, permission):
-    pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+    pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s\s+' % user.name
     string = r"\n    %s    =    %s" % (permission, user.name)
 
     self.repo.replace(pattern, string)
@@ -60,12 +61,25 @@ class ListUsers(object):
 
   @with_user
   def remove(self, user):
-    pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+    pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s\s+' % user.name
     self.repo.replace(pattern, "")
 
     self.repository_model.git.commit(['conf'],
                          "Deleted user %s from repository %s" %
                          (user.name, self.repository_model.name))
+
+  def list(self):
+    users = []
+    for user in self.repo.users:
+      if user=="None":
+        continue
+      pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s\s+' % user
+      with open(str(self.repo.path)) as f:
+        config = f.read()
+        for match in re.compile(pattern).finditer(config):
+          perm = match.group(2)
+      users.append({"name":user,"permission":perm})
+    return users
 
   def __iter__(self):
     for user in self._user:
