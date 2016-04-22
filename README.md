@@ -61,6 +61,9 @@ Every repo has an `users` object, in order to facilitate basic operations: addin
 ```python
 print "Repo's users: %s" % repo.users
 
+# list a repo's users
+users_as_list = repo.users.list()
+
 user = olite.users.create(name='bob', key_path="~/.ssh/third_rsa.pub")
 
 # add a new user
@@ -102,6 +105,10 @@ vlad.keys.append('just put the key here')
 
 # check if user is admin or not
 print vlad.is_admin
+
+# list user's keys and repos
+keys_as_list = vlad.list_keys()
+repos_as_list = vlad.list_repos()
 
 # delete a user by name
 deleted_user = olite.users.delete('username')
