@@ -5,32 +5,34 @@ from sh import git
 
 
 class Git(object):
-  def __init__(self, repo):
-    self.repo = repo
 
-  def commit(self, objects, message):
-    # validate commit message
-    if not message or not isinstance(message, basestring):
-      raise ValueError("Commit message should not be empty or not string")
+    def __init__(self, repo):
+        self.repo = repo
 
-    env = os.environ.copy()
-    env.update({
-        'GIT_WORK_TREE': self.repo,
-        'GIT_DIR': '%s/.git' % self.repo,
-    })
+    def commit(self, objects, message):
+        # validate commit message
+        if not message or not isinstance(message, basestring):
+            raise ValueError(
+                "Commit message should not be empty or not string")
 
-    git.gc("--prune", _env=env)
-    git.checkout("HEAD", _env=env)
+        env = os.environ.copy()
+        env.update({
+            'GIT_WORK_TREE': self.repo,
+            'GIT_DIR': '%s/.git' % self.repo,
+        })
 
-    # pull and push from and to the remote
-    git.pull("origin", "master", _env=env)
+        git.gc("--prune", _env=env)
+        git.checkout("HEAD", _env=env)
 
-    for obj in objects:
-      git.add("-A", obj, _env=env)
+        # pull and push from and to the remote
+        git.pull("origin", "master", _env=env)
 
-    try:
-      git.commit("-m", message, _env=env)
-    except Exception:
-      pass
+        for obj in objects:
+            git.add("-A", obj, _env=env)
 
-    git.push(_env=env)
+        try:
+            git.commit("-m", message, _env=env)
+        except Exception:
+            pass
+
+        git.push(_env=env)
