@@ -4,49 +4,50 @@ from unipath import Path
 
 
 class ListKeys(list):
-  def __init__(self, user, *args, **kwargs):
-    super(ListKeys, self).__init__(*args, **kwargs)
-    self.user = user
 
-  def append(self, key):
-    key_path = Path(key)
+    def __init__(self, user, *args, **kwargs):
+        super(ListKeys, self).__init__(*args, **kwargs)
+        self.user = user
 
-    if key_path.isfile():
-      with open(str(key_path)) as f:
-        key = f.read()
+    def append(self, key):
+        key_path = Path(key)
 
-    if key in self:
-        return
+        if key_path.isfile():
+            with open(str(key_path)) as f:
+                key = f.read()
 
-    directory = Path(self.user.path, 'keydir', self.user.name,
-                     hashlib.md5(key.strip().split()[1]).hexdigest())
-    directory.mkdir(parents=True)
+        if key in self:
+            return
 
-    key_file = Path(directory, "%s.pub" % self.user.name)
-    if key_file.exists() and key_file.read_file() == key:
-        return
+        directory = Path(self.user.path, 'keydir', self.user.name,
+                         hashlib.md5(key.strip().split()[1]).hexdigest())
+        directory.mkdir(parents=True)
 
-    key_file.write_file(key)
+        key_file = Path(directory, "%s.pub" % self.user.name)
+        if key_file.exists() and key_file.read_file() == key:
+            return
 
-    self.user.git.commit(['keydir'],
-                         'Added new key for user %s' % self.user.name)
+        key_file.write_file(key)
 
-    super(ListKeys, self).append(key)
+        self.user.git.commit(['keydir'],
+                             'Added new key for user %s' % self.user.name)
 
-  def remove(self, key):
-    directory = Path(self.user.path, 'keydir', self.user.name,
-                     hashlib.md5(key.strip().split()[1]).hexdigest())
-    key_file = Path(directory, "%s.pub" % self.user.name)
+        super(ListKeys, self).append(key)
 
-    if not key_file.exists():
-      raise ValueError("Invalid key")
+    def remove(self, key):
+        directory = Path(self.user.path, 'keydir', self.user.name,
+                         hashlib.md5(key.strip().split()[1]).hexdigest())
+        key_file = Path(directory, "%s.pub" % self.user.name)
 
-    key_file.remove()
-    key_file.parent.rmdir()
+        if not key_file.exists():
+            raise ValueError("Invalid key")
 
-    self.user.git.commit(['keydir'],
-                         'Removed key for user %s' % self.user.name)
+        key_file.remove()
+        key_file.parent.rmdir()
 
-  def __add__(self, keys):
-    for key in keys:
-      self.append(key)
+        self.user.git.commit(['keydir'],
+                             'Removed key for user %s' % self.user.name)
+
+    def __add__(self, keys):
+        for key in keys:
+            self.append(key)

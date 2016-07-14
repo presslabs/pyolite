@@ -7,77 +7,78 @@ from pyolite.models.lists import ListKeys
 
 
 class TestKeyList(TestCase):
-  def test_if_we_commit_after_a_key_append(self):
-    key_path = "tests/fixtures/simple_key.pub"
 
-    mock_file = MagicMock()
-    mock_file.__str__ = lambda x: key_path
-    mock_path = MagicMock(return_value=mock_file)
+    def test_if_we_commit_after_a_key_append(self):
+        key_path = "tests/fixtures/simple_key.pub"
 
-    mock_hashlib = MagicMock()
-    mock_hashlib.md5.hexdigest.return_value = "HASH"
+        mock_file = MagicMock()
+        mock_file.__str__ = lambda x: key_path
+        mock_path = MagicMock(return_value=mock_file)
 
-    mock_user = MagicMock()
-    mock_user.path = "path"
-    mock_user.name = "test"
+        mock_hashlib = MagicMock()
+        mock_hashlib.md5.hexdigest.return_value = "HASH"
 
-    with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
-                        hashlib=mock_hashlib):
-      keys = ListKeys(mock_user)
+        mock_user = MagicMock()
+        mock_user.path = "path"
+        mock_user.name = "test"
 
-      keys.append(key_path)
+        with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
+                            hashlib=mock_hashlib):
+            keys = ListKeys(mock_user)
 
-    mock_path.has_calls([
-        call("path", key_path),
-        call("path", "keydir", "HASH"),
-        call(mock_file, "test"),
-    ])
+            keys.append(key_path)
 
-    eq_(mock_file.isfile.call_count, 1)
-    eq_(mock_file.mkdir.call_count, 1)
-    mock_file.write_file.assert_called_once_with('nothing to see here\n')
+        mock_path.has_calls([
+            call("path", key_path),
+            call("path", "keydir", "HASH"),
+            call(mock_file, "test"),
+        ])
 
-  def test_list_addition(self):
-    mock_user = MagicMock()
-    mock_append = MagicMock()
+        eq_(mock_file.isfile.call_count, 1)
+        eq_(mock_file.mkdir.call_count, 1)
+        mock_file.write_file.assert_called_once_with('nothing to see here\n')
 
-    keys = ListKeys(mock_user)
-    keys.append = mock_append
+    def test_list_addition(self):
+        mock_user = MagicMock()
+        mock_append = MagicMock()
 
-    keys = keys + ['first_key', 'second_key']
+        keys = ListKeys(mock_user)
+        keys.append = mock_append
 
-    mock_append.has_calls([
-        call('first_key'),
-        call('second_key'),
-    ])
+        keys = keys + ['first_key', 'second_key']
 
-  def test_list_remove(self):
-    key = "my_awesome_key"
+        mock_append.has_calls([
+            call('first_key'),
+            call('second_key'),
+        ])
 
-    mock_file = MagicMock()
-    mock_file.__str__ = lambda x: key
-    mock_file.exists.return_value = True
-    mock_path = MagicMock(return_value=mock_file)
+    def test_list_remove(self):
+        key = "my_awesome_key"
 
-    mock_hashlib = MagicMock()
-    mock_hashlib.md5.hexdigest.return_value = "HASH"
+        mock_file = MagicMock()
+        mock_file.__str__ = lambda x: key
+        mock_file.exists.return_value = True
+        mock_path = MagicMock(return_value=mock_file)
 
-    mock_user = MagicMock()
-    mock_user.path = "path"
-    mock_user.name = "test"
+        mock_hashlib = MagicMock()
+        mock_hashlib.md5.hexdigest.return_value = "HASH"
 
-    with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
-                        hashlib=mock_hashlib):
-      keys = ListKeys(mock_user)
+        mock_user = MagicMock()
+        mock_user.path = "path"
+        mock_user.name = "test"
 
-      keys.remove(key)
+        with patch.multiple('pyolite.models.lists.keys', Path=mock_path,
+                            hashlib=mock_hashlib):
+            keys = ListKeys(mock_user)
 
-      mock_path.has_calls([
-          call("path", 'keydir', 'HASH'),
-          call(mock_file, "test.pub"),
-      ])
+            keys.remove(key)
 
-      commit_message = "Removed key for user test"
-      mock_user.git.commit.has_calls([call(["my_awesome_key"],
-                                           commit_message,
-                                           action='remove')])
+            mock_path.has_calls([
+                call("path", 'keydir', 'HASH'),
+                call(mock_file, "test.pub"),
+            ])
+
+            commit_message = "Removed key for user test"
+            mock_user.git.commit.has_calls([call(["my_awesome_key"],
+                                                 commit_message,
+                                                 action='remove')])
