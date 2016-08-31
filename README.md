@@ -1,14 +1,14 @@
-pyolite [![Build Status](https://travis-ci.org/PressLabs/pyolite.svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.png)](https://coveralls.io/r/PressLabs/pyolite) [![Downloads](https://pypip.in/d/pyolite/badge.png)](https://crate.io/packages/pyolite/)
+pyolite [![Build Status](https://travis-ci.org/PressLabs/pyolite.svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.svg?branch=master)](https://coveralls.io/github/PressLabs/pyolite)
 =======
 # Python wrapper for gitolite
 
-Easy and simple to user, just `pip install pyolite` and boom!!!
+Easy and simple to use, just `pip install pyolite` and boom!!!
 
-Using an intuitive API, `pyolite` help you easly create users and repos using `gitolite`.
+Using an intuitive API, `pyolite` helps you to easily create users and repos using `gitolite`.
 
-## Gitolite Setup Prereqs
+## Gitolite Setup Prerequisites
 
-Using Pyolite is very easy, but requires some initial set up. First, your **gitolite-admin** repo must contain a directory called `repos`, and all `.conf` files in this directory should be included in your `gitolite.conf` file. For example, your **gitolite-admin** repo might have the following structure:
+Using Pyolite is very easy, but it requires some initial setup. First, your **gitolite-admin** repo must contain a directory called `repos`, and all `.conf` files in this directory should be included in your `gitolite.conf` file. For example, your **gitolite-admin** repo might have the following structure:
 
 ```
 ├── gitolite.conf
@@ -44,8 +44,10 @@ olite = Pyolite(admin_repository=admin_repository)
 After that, we can create and get a repo using `create` and `get` methods.
 ```python
 # create a repo
+repo = olite.repos.create('my_repo')
+# get a repo
 repo = olite.repos.get('my_repo')
-repo = olite.repos.create('ydo')
+# get or create a repo
 repo = olite.repos.get_or_create('second_repo')
 ```
 
@@ -69,7 +71,7 @@ repo.users.remove('admin')
 
 ### Users API
 
-You an easly manipulate `users` aswell, using allmost the same API.
+You can easily manipulate `users` as well, using almost the same API.
 
 ```python
 from pyolite import Pyolite
