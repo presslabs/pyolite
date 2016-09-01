@@ -44,7 +44,7 @@ class TestKeyList(TestCase):
         keys = ListKeys(mock_user)
         keys.append = mock_append
 
-        keys = keys + ['first_key', 'second_key']
+        keys + ['first_key', 'second_key']
 
         mock_append.has_calls([
             call('first_key'),
@@ -52,7 +52,7 @@ class TestKeyList(TestCase):
         ])
 
     def test_list_remove(self):
-        key = "my_awesome_key"
+        key = "begin_rsa 1"
 
         mock_file = MagicMock()
         mock_file.__str__ = lambda x: key
