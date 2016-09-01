@@ -17,17 +17,18 @@ class TestUserManager(TestCase):
             users.create('test_username')
 
     def test_create_user_succesfully(self):
-        mocked_user = MagicMock(return_value='test_username')
+        mocked_user_obj = MagicMock()
+        mocked_user = MagicMock(return_value=mocked_user_obj)
 
         UserManager.__bases__ = (MockManager,)
         with patch.multiple('pyolite.managers.user', User=mocked_user,
                             Manager=MagicMock()):
             users = UserManager('~/path/to/admin/gitolite/repo')
 
-            eq_('test_username', users.create('test_username', 'key_path'))
+            eq_(mocked_user_obj, users.create('test_username', 'key_path'))
             mocked_user.assert_called_once_with(mocked_path, mocked_git,
-                                                'test_username',
-                                                keys=['key_path'])
+                                                'test_username')
+            mocked_user_obj.keys.append.assert_called_once_with('key_path')
 
     def test_get_user(self):
         mocked_user = MagicMock()
