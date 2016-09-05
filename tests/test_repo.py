@@ -43,13 +43,27 @@ class TestRepo(TestCase):
             repo = Repo(mocked_path)
             eq_(repo.users, ['user1', 'user2'])
 
-    def test_it_shoujld_write_to_repo_config(self):
+    def test_it_should_write_to_repo_config(self):
         path = 'tests/fixtures/empty_repo.conf'
 
         Repo(path).write('some_text')
 
         with open(path, 'r+') as f:
             eq_('some_text', f.read())
+
+            f.seek(0)
+            f.write('')
+            f.truncate()
+
+    def test_it_should_overwrite_the_repo_config(self):
+        path = 'tests/fixtures/empty_repo.conf'
+
+        Repo(path).write('some_text')
+
+        Repo(path).overwrite('another_text')
+
+        with open(path, 'r+') as f:
+            eq_('another_text', f.read())
 
             f.seek(0)
             f.write('')
@@ -141,6 +155,35 @@ class TestRepo(TestCase):
 
                 mocked_fcntl.reset_mock()
                 repo.write('some_text')
+
+                # asserts lock has been removed after writing
+                mocked_fcntl.flock.assert_called_once_with(manager,
+                                                           mocked_fcntl.LOCK_UN)
+
+    def test_overwrite_filelocking(self):
+        path = 'tests/fixtures/empty_repo.conf'
+        mocked_path = MagicMock()
+        mocked_path.__str__ = lambda x: path
+
+        mocked_fcntl = MagicMock()
+        mocked_open = MagicMock()
+
+        with patch('__builtin__.open', mocked_open):
+            manager = mocked_open.return_value.__enter__.return_value
+
+            # asserts file locking has been put in place before writing
+            manager.write = lambda text: ([
+                mocked_fcntl.flock.assert_called_once_with(
+                    manager, mocked_fcntl.LOCK_EX
+                ),
+                mocked_fcntl.reset_mock()
+            ])
+
+            with patch.multiple('pyolite.repo', fcntl=mocked_fcntl):
+                repo = Repo(path)
+
+                mocked_fcntl.reset_mock()
+                repo.overwrite('some_text')
 
                 # asserts lock has been removed after writing
                 mocked_fcntl.flock.assert_called_once_with(manager,

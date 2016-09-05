@@ -39,3 +39,9 @@ class Repo(object):
             fcntl.flock(f, fcntl.LOCK_EX)
             f.write(string)
             fcntl.flock(f, fcntl.LOCK_UN)
+
+    def overwrite(self, string):
+        with open(self.path, 'w') as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(string)
+            fcntl.flock(f, fcntl.LOCK_UN)
