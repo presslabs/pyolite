@@ -21,7 +21,6 @@ class ListUsers(object):
                 user = User(self.repository_model.path,
                             self.repository_model.git,
                             string_user)
-
             return func(self, user, *args, **kwargs)
 
         return decorated
@@ -69,6 +68,31 @@ class ListUsers(object):
                                          "Deleted user %s from repository %s" %
                                          (user.name,
                                           self.repository_model.name))
+
+    @with_user
+    def get_or_create(self, user):
+        return user
+
+    def set(self, users=None):
+        users_serialized = ""
+        if isinstance(users, dict):
+            users = users.iteritems()
+
+        if users:
+            for user, permission in users:
+                if not hasattr(user, 'name'):
+                    user = self.get_or_create(user)
+
+                users_serialized += "    %s     =    %s\n" % (permission,
+                                                              user.name)
+
+        self.repo.overwrite(users_serialized)
+
+        users = ", ".join((user for user, permission in users))
+        commit_message = "Initialized repository %s with users: %s" % (
+            self.repository_model.name, users
+        )
+        self.repository_model.git.commit(['conf'], commit_message)
 
     def __iter__(self):
         for user in self._user:
