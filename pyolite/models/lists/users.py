@@ -74,7 +74,7 @@ class ListUsers(object):
         return user
 
     def set(self, users=None):
-        users_serialized = ""
+        users_serialized = "repo {}\n".format(self.repository_model.name)
         if isinstance(users, dict):
             users = users.iteritems()
 
