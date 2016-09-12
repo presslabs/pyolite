@@ -171,7 +171,8 @@ class TestUserList(Spec):
             repo_users = ListUsers(mocked_repository)
             repo_users.set((('mocked', 'R'), ('mocked', 'RW+')))
 
-            serialized_users = "    R     =    user\n    RW+     =    user\n"
+            serialized_users = "repo test_repo\n    R     =    user\n" \
+                               "    RW+     =    user\n"
             mocked_repo.overwrite.assert_called_once_with(serialized_users)
 
             message = "Initialized repository test_repo with users: test, user"
