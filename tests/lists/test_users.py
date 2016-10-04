@@ -179,7 +179,7 @@ class TestUserList(Spec):
             string = r"\n    %s    =    %s" % ('R', 'another_user')
             mocked_repo.replace.assert_called_once_with(pattern, string)
 
-            message = "User another_user not in repository test_repo"
+            message = "User another_user have permission R in repository test_repo"
             mocked_repository.git.commit.has_calls([call(['conf'], message)])
 
     @raises(ValueError)
