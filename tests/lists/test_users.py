@@ -96,7 +96,8 @@ class TestUserList(Spec):
             message = "Deleted user another_user from repository test_repo"
             mocked_repository.git.commit.has_calls([call(['conf'], message)])
 
-    def test_user_edit_permissions(self):
+    @raises(ValueError)
+    def test_invalid_user_edit_permissions(self):
         mocked_repo = MagicMock()
         mocked_repository = MagicMock()
         mocked_user = MagicMock()
@@ -121,9 +122,148 @@ class TestUserList(Spec):
             string = r"\n    %s    =    %s" % ('R', 'another_user')
             mocked_repo.replace.assert_called_once_with(pattern, string)
 
-            message = "User another_user has R permission for repository test_repo"
+            message = "User another_user not in repository test_repo"
             mocked_repository.git.commit.has_calls([call(['conf'], message)])
 
+    @raises(ValueError)
+    def test_user_edit_invalid_permissions(self):
+        mocked_repo = MagicMock()
+        mocked_repository = MagicMock()
+        mocked_user = MagicMock()
+
+        mock_single_user = MagicMock()
+        mock_single_user.name = 'another_user'
+        mock_single_user.__str__ = lambda x: 'another_user'
+
+        mocked_repository.name = 'test_repo'
+        mocked_repository.path = 'path'
+
+        mocked_user.get.return_value = mock_single_user
+        mocked_repo.users = ['another_user']
+
+        with patch.multiple('pyolite.models.lists.users',
+                            Repo=MagicMock(return_value=mocked_repo),
+                            User=mocked_user):
+            repo_users = ListUsers(mocked_repository)
+            repo_users.edit('test', 'X')
+
+            pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % 'another_user'
+            string = r"\n    %s    =    %s" % ('X', 'another_user')
+            mocked_repo.replace.assert_called_once_with(pattern, string)
+
+            message = "User another_user edit invalid permission for repository test_repo"
+            mocked_repository.git.commit.has_calls([call(['conf'], message)])
+
+    def test_valid_user_edit_valid_permissions(self):
+        mocked_repo = MagicMock()
+        mocked_repository = MagicMock()
+        mocked_user = MagicMock()
+
+        mock_single_user = MagicMock()
+        mock_single_user.name = 'another_user'
+        mock_single_user.__str__ = lambda x: 'another_user'
+
+        mocked_repository.name = 'test_repo'
+        mocked_repository.path = 'path'
+
+        mocked_user.get.return_value = mock_single_user
+        mocked_repo.users = ['another_user']
+
+        with patch.multiple('pyolite.models.lists.users',
+                            Repo=MagicMock(return_value=mocked_repo),
+                            User=mocked_user):
+            repo_users = ListUsers(mocked_repository)
+            repo_users.edit('test', 'R')
+
+            pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % 'another_user'
+            string = r"\n    %s    =    %s" % ('R', 'another_user')
+            mocked_repo.replace.assert_called_once_with(pattern, string)
+
+            message = "User another_user not in repository test_repo"
+            mocked_repository.git.commit.has_calls([call(['conf'], message)])
+
+    @raises(ValueError)
+    def test_user_edit_invalid_permissions(self):
+        mocked_repo = MagicMock()
+        mocked_repository = MagicMock()
+        mocked_user = MagicMock()
+
+        mock_single_user = MagicMock()
+        mock_single_user.name = 'another_user'
+        mock_single_user.__str__ = lambda x: 'another_user'
+
+        mocked_repository.name = 'test_repo'
+        mocked_repository.path = 'path'
+
+        mocked_user.get.return_value = mock_single_user
+        mocked_repo.users = ['another_user']
+
+        with patch.multiple('pyolite.models.lists.users',
+                            Repo=MagicMock(return_value=mocked_repo),
+                            User=mocked_user):
+            repo_users = ListUsers(mocked_repository)
+            repo_users.edit('test', 'X')
+
+            pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % 'another_user'
+            string = r"\n    %s    =    %s" % ('X', 'another_user')
+            mocked_repo.replace.assert_called_once_with(pattern, string)
+
+            message = "User another_user edit invalid permission for repository test_repo"
+            mocked_repository.git.commit.has_calls([call(['conf'], message)])
+
+    def user_init(self, *args, **kwargs):
+        self.name = args[2]
+
+    @patch('pyolite.models.user.User.__init__', new=user_init)
+    def test_user_get_or_create(self):
+        mocked_repo = MagicMock()
+        mocked_repository = MagicMock()
+
+        mocked_repository.name = 'test_repo'
+        mocked_repository.path = 'path'
+
+        with patch.multiple('pyolite.models.lists.users',
+                            Repo=MagicMock(return_value=mocked_repo)):
+            found_user = object()
+            mocked_user_get = MagicMock(return_value=found_user)
+
+            with patch.multiple('pyolite.models.user.User', get=mocked_user_get):
+                repo_users = ListUsers(mocked_repository)
+
+                # user found
+                user = repo_users.get_or_create('test_user')
+                assert user is found_user
+
+                # user created
+                mocked_user_get.side_effect = ValueError
+                user = repo_users.get_or_create('test_user')
+                assert user.name is 'test_user'
+
+    def test_users_set(self):
+        mocked_repo = MagicMock()
+        mocked_repository = MagicMock()
+        mocked_user = MagicMock()
+
+        mock_single_user = MagicMock()
+        mock_single_user.name = 'user'
+
+        mocked_repository.name = 'test_repo'
+        mocked_repository.path = 'path'
+
+        mocked_user.get.return_value = mock_single_user
+
+        with patch.multiple('pyolite.models.lists.users',
+                            Repo=MagicMock(return_value=mocked_repo),
+                            User=mocked_user):
+            repo_users = ListUsers(mocked_repository)
+            repo_users.set((('mocked', 'R'), ('mocked', 'RW+')))
+
+            serialized_users = "repo test_repo\n    R     =    user\n" \
+                               "    RW+     =    user\n"
+            mocked_repo.overwrite.assert_called_once_with(serialized_users)
+
+            message = "Initialized repository test_repo with users: test, user"
+            mocked_repository.git.commit.has_calls([call(['conf'], message)])
     def user_init(self, *args, **kwargs):
         self.name = args[2]
 
