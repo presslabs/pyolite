@@ -36,7 +36,7 @@ class TestGit(TestCase):
         mock_os.environ.copy.assert_called_once_with()
         mock_env.update.assert_called_once_with({'GIT_WORK_TREE': mock_repo,
                                                  'GIT_DIR': '%s/.git' % mock_repo})
-        mock_git.gc.assert_called_once_with('--prune --force', _env=mock_env)
+        mock_git.gc.assert_called_once_with('--force', '--prune', _env=mock_env)
         mock_git.checkout.assert_called_once_with('HEAD', _env=mock_env)
         mock_git.pull("origin", "master", _env=mock_env)
 
