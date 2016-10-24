@@ -21,7 +21,7 @@ class Git(object):
             'GIT_DIR': '%s/.git' % self.repo,
         })
 
-        git.gc("--prune", _env=env)
+        git.gc("--prune --force", _env=env)
         git.checkout("HEAD", _env=env)
 
         # pull and push from and to the remote
