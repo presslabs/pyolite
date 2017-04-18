@@ -1,4 +1,4 @@
 include LICENSE
 
 include versioneer.py
-include pyolite/_version.py
+include pyolite/version.py
