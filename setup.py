@@ -1,10 +1,7 @@
 from setuptools import setup, find_packages
 
 import versioneer
-from _version import get_versions
-
-__version__ = get_versions()['version']
-del get_versions
+from pyolite import __version__ as version
 
 
 requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
@@ -12,7 +9,7 @@ requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
             'six==1.6.1', 'spec==0.11.1']
 
 setup(name="pyolite",
-      version=__version__,
+      version=version,
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
