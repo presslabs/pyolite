@@ -29,4 +29,5 @@ setup(name="pyolite",
           'Operating System :: POSIX',
           'Topic :: System :: Networking',
           'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.5'
       ])
