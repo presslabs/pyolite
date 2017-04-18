@@ -1,10 +1,6 @@
 from setuptools import setup, find_packages
 
 import versioneer
-from _version import get_versions
-
-__version__ = get_versions()['version']
-del get_versions
 
 
 requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
