@@ -1,12 +1,13 @@
 from abc import ABCMeta, abstractmethod
 
+import six
 from unipath import Path
 
 from pyolite.git import Git
 
 
+@six.add_metaclass(ABCMeta)
 class Manager(object):
-    __metaclass__ = ABCMeta
 
     def __init__(self, admin_repository):
         self.path = Path(admin_repository)
@@ -20,9 +21,9 @@ class Manager(object):
                                                       **kwargs)
 
     @abstractmethod
-    def get(self, entity):
+    def get(self, *args, **kwargs):
         raise NotImplementedError("Each manager needs a get method")
 
     @abstractmethod
-    def create(self, entity):
+    def create(self, *args, **kwargs):
         raise NotImplementedError("Each manager needs a create method")

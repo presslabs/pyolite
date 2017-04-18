@@ -11,7 +11,7 @@ class Git(object):
 
     def commit(self, objects, message):
         # validate commit message
-        if not message or not isinstance(message, basestring):
+        if not message or not isinstance(message, str):
             raise ValueError(
                 "Commit message should not be empty or not string")
 

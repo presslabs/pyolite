@@ -1,5 +1,5 @@
-from managers.repository import RepositoryManager
-from managers.user import UserManager
+from pyolite.managers.repository import RepositoryManager
+from pyolite.managers.user import UserManager
 
 
 class Pyolite(object):

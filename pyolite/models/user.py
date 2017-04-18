@@ -4,15 +4,14 @@ from pyolite.models.lists import ListKeys
 
 
 class User(object):
-    def __init__(self, path, git, name, repos=None, keys=None):
+    def __init__(self, path, git, name, **kwargs):
         self.name = name
-        self.repos = repos or []
+        self.repos = kwargs.get('repos') or []
 
         self.path = path
         self.git = git
 
-        keys = keys or []
-        self.keys = ListKeys(self, keys)
+        self.keys = ListKeys(self, kwargs.get('keys') or [])
 
     @classmethod
     def get_by_name(cls, name, path, git):
@@ -33,13 +32,13 @@ class User(object):
                     repos.append(repo)
 
         if repos or keys:
-            return cls(path, git, name, repos, keys)
-        else:
-            return None
+            return cls(path, git, name, **{'repos': repos, 'keys': keys})
+
+        return None
 
     @classmethod
     def get(cls, user, path, git):
-        if isinstance(user, basestring):
+        if isinstance(user, str):
             user = User.get_by_name(user, path, git)
 
         if not isinstance(user, User) or not user:

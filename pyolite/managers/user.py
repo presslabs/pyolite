@@ -26,7 +26,7 @@ class UserManager(Manager):
             if obj.isdir():
                 continue
 
-            files = re.compile('(\w+.pub)').findall(str(obj))
+            files = re.compile(r'(\w+.pub)').findall(str(obj))
             if files:
                 users += files
 

@@ -1,5 +1,5 @@
-import fcntl
 import re
+import fcntl
 
 
 class Repo(object):
@@ -29,7 +29,7 @@ class Repo(object):
             fcntl.flock(f, fcntl.LOCK_EX)
             config = f.read()
             fcntl.flock(f, fcntl.LOCK_UN)
-            for match in re.compile('=( *)(\w+)').finditer(config):
+            for match in re.compile(r'=( *)(\w+)').finditer(config):
                 users.append(match.group(2))
 
         return users

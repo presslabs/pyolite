@@ -6,24 +6,25 @@ from pyolite.repo import Repo
 ACCEPTED_PERMISSIONS = set('RW+CD')
 
 
+def with_user(func):
+    def decorated(self, string_user, *args, **kwargs):
+        try:
+            user = User.get(string_user, self.repository_model.path,
+                            self.repository_model.git)
+        except ValueError:
+            user = User(self.repository_model.path,
+                        self.repository_model.git,
+                        string_user)
+        return func(self, user, *args, **kwargs)
+
+    return decorated
+
+
 class ListUsers(object):
     def __init__(self, repository):
         self.repository_model = repository
         self.repo = Repo(Path(repository.path,
                               "conf/repos/%s.conf" % repository.name))
-
-    def with_user(func):
-        def decorated(self, string_user, *args, **kwargs):
-            try:
-                user = User.get(string_user, self.repository_model.path,
-                                self.repository_model.git)
-            except ValueError:
-                user = User(self.repository_model.path,
-                            self.repository_model.git,
-                            string_user)
-            return func(self, user, *args, **kwargs)
-
-        return decorated
 
     @with_user
     def add(self, user, permission):
