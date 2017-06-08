@@ -1,15 +1,12 @@
 from setuptools import setup, find_packages
 
-import versioneer
-from pyolite import __version__ as version
-
 
 requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
             'coverage==3.7.1', 'mock==1.0.1', 'nose==1.3.3',
             'six==1.6.1', 'spec==0.11.1']
 
 setup(name="pyolite",
-      version=version,
+      version='1.5.6',
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
