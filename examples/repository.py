@@ -9,7 +9,7 @@ repo = olite.repos.get('my_repo')
 repo = olite.repos.create('ydo')
 repo = olite.repos.get_or_create('second_repo')
 
-print "Repo's users: %s" % repo.users
+print("Repo's users: %s" % repo.users)
 
 user = olite.users.create(name='bob', key_path="~/.ssh/third_rsa.pub")
 

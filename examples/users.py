@@ -21,7 +21,7 @@ vlad.keys.append('just put the key here')
 vlad.keys.remove("my awesome key")
 
 # check if user is admin or not
-print vlad.is_admin
+print(vlad.is_admin)
 
 # TODO:
 # vlad.repos['oxygen'].permissions = 'RW+'

@@ -1,3 +1,4 @@
+from six import string_types
 from unipath import Path
 
 from pyolite.models.lists import ListKeys
@@ -38,7 +39,7 @@ class User(object):
 
     @classmethod
     def get(cls, user, path, git):
-        if isinstance(user, str):
+        if isinstance(user, string_types):
             user = User.get_by_name(user, path, git)
 
         if not isinstance(user, User) or not user:

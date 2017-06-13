@@ -77,7 +77,7 @@ class ListUsers(object):
     def set(self, users=None):
         users_serialized = "repo {}\n".format(self.repository_model.name)
         if isinstance(users, dict):
-            users = users.iteritems()
+            users = users.items()
 
         if users:
             for user, permission in users:
