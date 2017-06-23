@@ -6,7 +6,7 @@ requires = ['sh==1.09', 'Unipath==1.0', 'argparse==1.2.1',
             'six==1.6.1', 'spec==0.11.1']
 
 setup(name="pyolite",
-      version='1.5.6',
+      version='1.5.7',
       platforms='any',
       packages=find_packages(),
       include_package_data=True,
