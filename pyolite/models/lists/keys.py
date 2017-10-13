@@ -15,6 +15,9 @@ class ListKeys(list):
             with open(str(key_path)) as f:
                 key = f.read()
 
+        if not isinstance(key, bytes):
+            key = key.encode('utf-8')
+
         if key in self:
             return
 
@@ -26,7 +29,7 @@ class ListKeys(list):
         if key_file.exists() and key_file.read_file() == key:
             return
 
-        key_file.write_file(str(key))
+        key_file.write_file(key, mode='wb')
 
         self.user.git.commit(['keydir'],
                              'Added new key for user %s' % self.user.name)
@@ -34,6 +37,9 @@ class ListKeys(list):
         super(ListKeys, self).append(key)
 
     def remove(self, key):
+        if not isinstance(key, bytes):
+            key = key.encode('utf-8')
+
         directory = Path(self.user.path, 'keydir', self.user.name,
                          hashlib.md5(key.strip().split()[1]).hexdigest())
         key_file = Path(directory, "%s.pub" % self.user.name)

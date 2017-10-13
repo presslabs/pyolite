@@ -32,7 +32,7 @@ def test_if_we_commit_after_a_key_append():
     assert mock_file.isfile.call_count == 1
     assert mock_file.mkdir.call_count == 1
 
-    mock_file.write_file.assert_called_once_with('nothing to see here\n')
+    mock_file.write_file.assert_called_once_with(b'nothing to see here\n', mode='wb')
 
 
 def test_list_addition():
