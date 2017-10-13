@@ -29,7 +29,7 @@ class ListKeys(list):
         if key_file.exists() and key_file.read_file() == key:
             return
 
-        key_file.write_file(str(key))
+        key_file.write_file(key, mode='wb')
 
         self.user.git.commit(['keydir'],
                              'Added new key for user %s' % self.user.name)
