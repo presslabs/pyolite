@@ -49,6 +49,15 @@ class ListUsers(object):
 
     @with_user
     def edit(self, user, permission):
+        if user.name not in self.repo.users:
+            raise ValueError('User %s not exists in repo %s' %
+                             (user.name, self.repository_model.name))
+
+        if set(map(lambda permission: permission.upper(), permission)) - \
+                ACCEPTED_PERMISSIONS != set([]):
+            raise ValueError('Invalid permissions. They must be from %s' %
+                             ACCEPTED_PERMISSIONS)
+
         pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
         string = r"\n    %s    =    %s" % (permission, user.name)
 
@@ -95,19 +104,19 @@ class ListUsers(object):
         )
         self.repository_model.git.commit(['conf'], commit_message)
 
-    def __iter__(self):
-        for user in self._user:
-            yield user
+    # def __iter__(self):
+    #     for user in self._user:
+    #         yield user
 
-    def __getitem__(self, item):
-        return self._users[item]
+    # def __getitem__(self, item):
+    #     return self._users[item]
 
-    def __setitem__(self, item, value):
-        self._users[item] = value
+    # def __setitem__(self, item, value):
+    #     self._users[item] = value
 
-    def __add__(self, items):
-        for item in items:
-            self.append(item)
+    # def __add__(self, items):
+    #     for item in items:
+    #         self.append(item)
 
     def __str__(self):
         return "['%s']" % ', '.join(self.repo.users)
