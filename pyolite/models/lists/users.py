@@ -1,7 +1,10 @@
+import re
+
 from unipath import Path
 
 from pyolite.models.user import User
 from pyolite.repo import Repo
+
 
 ACCEPTED_PERMISSIONS = set('RW+CD')
 
@@ -74,7 +77,7 @@ class ListUsers(object):
     def get_or_create(self, user):
         return user
 
-    def set(self, users=None):
+    def set(self, users=None, overwrite_config=False):
         users_serialized = "repo {}\n".format(self.repository_model.name)
         if isinstance(users, dict):
             users = users.iteritems()
@@ -86,8 +89,15 @@ class ListUsers(object):
 
                 users_serialized += "    %s     =    %s\n" % (permission,
                                                               user.name)
+        config = ""
+        if not overwrite_config:
+            pattern = r"config(\s*)([\w\.]+)(\s*)=(\s*)([\w\.\"\@\:\/\'\%\^\&\*]+)(\s*)"
+            for result in re.finditer(pattern, self.repo.read()):
+                config += "    config %s    =    %s\n" % (result.group(2),
+                                                          result.group(5))
 
-        self.repo.overwrite(users_serialized)
+
+        self.repo.overwrite(users_serialized + config)
 
         users = ", ".join((user for user, permission in users))
         commit_message = "Initialized repository %s with users: %s" % (
@@ -96,7 +106,7 @@ class ListUsers(object):
         self.repository_model.git.commit(['conf'], commit_message)
 
     def __iter__(self):
-        for user in self._user:
+        for user in self._users:
             yield user
 
     def __getitem__(self, item):

@@ -34,6 +34,14 @@ class Repo(object):
 
         return users
 
+    def read(self):
+        with open(str(self.path)) as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            config = f.read()
+            fcntl.flock(f, fcntl.LOCK_UN)
+
+        return config
+
     def write(self, string):
         with open(self.path, 'a') as f:
             fcntl.flock(f, fcntl.LOCK_EX)
