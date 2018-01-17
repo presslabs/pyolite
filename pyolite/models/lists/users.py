@@ -3,6 +3,7 @@ import re
 from unipath import Path
 
 from pyolite.models.user import User
+from pyolite.patterns import CONFIG_PATTERN, USER_PATTERN
 from pyolite.repo import Repo
 
 
@@ -52,7 +53,7 @@ class ListUsers(object):
 
     @with_user
     def edit(self, user, permission):
-        pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+        pattern = USER_PATTERN % user.name
         string = r"\n    %s    =    %s" % (permission, user.name)
 
         self.repo.replace(pattern, string)
@@ -65,7 +66,7 @@ class ListUsers(object):
 
     @with_user
     def remove(self, user):
-        pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+        pattern = USER_PATTERN % user.name
         self.repo.replace(pattern, "")
 
         self.repository_model.git.commit(['conf'],
@@ -89,14 +90,7 @@ class ListUsers(object):
 
                 users_serialized += "    %s     =    %s\n" % (permission,
                                                               user.name)
-        config = ""
-        if not overwrite_config:
-            pattern = r"config(\s*)([\w\.]+)(\s*)=(\s*)([\w\.\"\@\:\/\'\%\^\&\*]+)(\s*)"
-            for result in re.finditer(pattern, self.repo.read()):
-                config += "    config %s    =    %s\n" % (result.group(2),
-                                                          result.group(5))
-
-
+        config = "" if overwrite_config else self.repository_model.config
         self.repo.overwrite(users_serialized + config)
 
         users = ", ".join((user for user, permission in users))

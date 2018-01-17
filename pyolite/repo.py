@@ -1,6 +1,8 @@
 import re
 import fcntl
 
+from pyolite import patterns
+
 
 class Repo(object):
     def __init__(self, path):
@@ -53,3 +55,13 @@ class Repo(object):
             fcntl.flock(f, fcntl.LOCK_EX)
             f.write(string)
             fcntl.flock(f, fcntl.LOCK_UN)
+
+    def set_config(self, config):
+        new_content = ""
+        content = self.read()
+
+        for line in content.split("\n"):
+            if not re.match(patterns.CONFIG_PATTERN, content):
+                new_content += line + "\n"
+
+        return self.overwrite(new_content + config)
