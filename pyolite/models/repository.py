@@ -53,13 +53,13 @@ class Repository(object):
         structured_config = structured_config or self._read_current_config()
 
         config = ""
-        for name, value in structured_config.iteritems():
+        for name, value in structured_config.items():
             config += "    config %s    =    %s\n" % (name, value)
         return config
 
     def _read_current_config(self):
         return {
-            result.group(2): result.group(5)
+            result.group(3): result.group(6)
             for result in re.finditer(CONFIG_PATTERN, self.repo.read())
         }
 

@@ -61,7 +61,7 @@ class Repo(object):
         content = self.read()
 
         for line in content.split("\n"):
-            if not re.match(patterns.CONFIG_PATTERN, content):
+            if not re.match(patterns.CONFIG_PATTERN, line):
                 new_content += line + "\n"
 
         return self.overwrite(new_content + config)
