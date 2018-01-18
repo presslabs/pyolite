@@ -1,0 +1,14 @@
+pipeline:
+  test-pyolite:
+    image: python:${PYTHON}-slim
+    pull: true
+    commands:
+      - pip install -r requirements.txt
+      - pip install python-coveralls
+      - make test
+
+matrix:
+  PYTHON:
+    - "2.7"
+    - "3.5"
+    - "3.6"
