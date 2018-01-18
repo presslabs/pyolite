@@ -5,13 +5,13 @@ from pyolite.managers.user import UserManager
 from tests.mocked_manager import MockManager, mocked_git, mocked_path
 
 
-@pytest.mark.xfail(raises=ValueError)
 def test_create_user_with_no_key():
     with patch.multiple('pyolite.managers.manager',
                         Git=MagicMock(),
                         Path=MagicMock()):
-        users = UserManager('~/path/to/admin/gitolite/repo')
-        users.create('test_username')
+        with pytest.raises(ValueError):
+            users = UserManager('~/path/to/admin/gitolite/repo')
+            users.create('test_username')
 
 def test_create_user_succesfully():
     mocked_user_obj = MagicMock()
@@ -36,7 +36,8 @@ def test_get_user():
         users = UserManager('~/path/to/admin/gitolite/repo')
 
         assert users.get('test_user') == 'test_user'
-        mocked_user.get_by_name.assert_called_once_with('test_user', mocked_path,mocked_git)
+        mocked_user.get_by_name.assert_called_once_with('test_user',
+                                                        mocked_path, mocked_git)
 
 def test_get_all_users():
     mocked_key_dir = MagicMock()
@@ -68,6 +69,6 @@ def test_get_all_users():
         assert mocked_file.isdir.call_count == 1
 
         mocked_re.compile.has_calls([call(r'(\w.pub)')])
-        mocked_re.compile('\w.pub').findall.assert_called_once_with(r'ok_file')
+        mocked_re.compile(r'\w.pub').findall.assert_called_once_with(r'ok_file')
 
         mocked_user.get_by_name.assert_called_once_with('file1', mocked_path, mocked_git)

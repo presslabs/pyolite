@@ -3,7 +3,7 @@ from unipath import Path
 
 from pyolite.repo import Repo
 from pyolite.patterns import CONFIG_PATTERN
-from pyolite.models.lists import ListUsers, RepositoryConfig
+from pyolite.models.lists import ListUsers
 
 
 class Repository(object):

@@ -154,7 +154,7 @@ class TestUserList(Spec):
 
     def test_users_set(self):
         mocked_repo = MagicMock()
-        mocked_repository = MagicMock()
+        mocked_repository = MagicMock(config="")
         mocked_user = MagicMock()
 
         mock_single_user = MagicMock()
