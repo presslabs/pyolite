@@ -3,7 +3,7 @@ pipeline:
     image: python:${PYTHON}-slim
     pull: true
     commands:
-      - pip install -r requirements.txt
+      - pip install -r requirements.dev.txt
       - pip install python-coveralls
       - pytest tests/
 
