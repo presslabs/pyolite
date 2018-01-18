@@ -98,4 +98,16 @@ vlad.keys.append('just put the key here')
 print vlad.is_admin
 ```
 
+### Config API
+
+Gitolite allow users to add extra configurations
+
+```python
+repo = olite.repos.get('my_repo')
+repo.config = ("gitolite.mirror.simple", "git@github.com:Presslabs/pyolite.git")
+repo.config = {
+    "gitolite.mirror.simple": "git@github.com:Presslabs/pyolite.git"
+}
+```
+
 If you need any help with this module, write me `vlad@presslabs.com`
