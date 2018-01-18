@@ -1,5 +1,6 @@
 try:
     from .pyolite import Pyolite
-except ImportError:
+except ImportError as exp:
     # need this in order to make versioneer work
+    print "error", exp
     pass
