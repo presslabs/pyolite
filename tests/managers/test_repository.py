@@ -20,7 +20,6 @@ def test_get_repository():
                                                               mocked_path,
                                                               mocked_git)
 
-@pytest.mark.xfail(raises=ValueError)
 def test_create_new_repository_that_already_exists():
     mocked_repository = MagicMock()
 
@@ -33,8 +32,9 @@ def test_create_new_repository_that_already_exists():
     with patch.multiple('pyolite.managers.repository',
                         Path=mocked_path,
                         Repository=mocked_repository):
-        repos = RepositoryManager('/path/to/admin/repo/')
-        repos.create('already_exists')
+        with pytest.raises(ValueError):
+            repos = RepositoryManager('/path/to/admin/repo/')
+            repos.create('already_exists')
 
 def test_it_should_commit_if_a_new_repository_was_succesfully_created():
     mocked_repository = MagicMock()

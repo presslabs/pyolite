@@ -1,7 +1,11 @@
+import re
+
 from unipath import Path
 
 from pyolite.models.user import User
+from pyolite.patterns import CONFIG_PATTERN, USER_PATTERN
 from pyolite.repo import Repo
+
 
 ACCEPTED_PERMISSIONS = set('RW+CD')
 
@@ -49,7 +53,7 @@ class ListUsers(object):
 
     @with_user
     def edit(self, user, permission):
-        pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+        pattern = USER_PATTERN % user.name
         string = r"\n    %s    =    %s" % (permission, user.name)
 
         self.repo.replace(pattern, string)
@@ -62,7 +66,7 @@ class ListUsers(object):
 
     @with_user
     def remove(self, user):
-        pattern = r'(\s*)([RW+DC]*)(\s*)=(\s*)%s' % user.name
+        pattern = USER_PATTERN % user.name
         self.repo.replace(pattern, "")
 
         self.repository_model.git.commit(['conf'],
@@ -74,7 +78,7 @@ class ListUsers(object):
     def get_or_create(self, user):
         return user
 
-    def set(self, users=None):
+    def set(self, users=None, overwrite_config=False):
         users_serialized = "repo {}\n".format(self.repository_model.name)
         if isinstance(users, dict):
             users = users.iteritems()
@@ -86,8 +90,8 @@ class ListUsers(object):
 
                 users_serialized += "    %s     =    %s\n" % (permission,
                                                               user.name)
-
-        self.repo.overwrite(users_serialized)
+        config = "" if overwrite_config else self.repository_model.config
+        self.repo.overwrite(users_serialized + config)
 
         users = ", ".join((user for user, permission in users))
         commit_message = "Initialized repository %s with users: %s" % (
@@ -96,7 +100,7 @@ class ListUsers(object):
         self.repository_model.git.commit(['conf'], commit_message)
 
     def __iter__(self):
-        for user in self._user:
+        for user in self._users:
             yield user
 
     def __getitem__(self, item):

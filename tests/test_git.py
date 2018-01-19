@@ -4,14 +4,14 @@ from mock import MagicMock, patch, call
 from pyolite.git import Git
 
 
-@pytest.mark.xfail(raises=ValueError)
 def test_commit_with_no_message():
     mock_repo = MagicMock()
 
-    git = Git(mock_repo)
-    objects = ['simple_object', 'more_complex_one']
+    with pytest.raises(ValueError):
+        git = Git(mock_repo)
+        objects = ['simple_object', 'more_complex_one']
 
-    git.commit(objects, '')
+        git.commit(objects, '')
 
 
 def test_commit_succesfully_with_multiple_objects():

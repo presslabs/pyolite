@@ -1,8 +1,22 @@
 import re
 import fcntl
 
+from .patterns import CONFIG_PATTERN
+
 
 class Repo(object):
+    """
+    Low level class, used to operate over raw gitolite config files.
+    A gitolite config file has the following structure:
+
+    repo repo_name
+        RW    =    readwriteuser
+        RW+   =    @readwritegroup
+        R     =    readuser
+
+        config gitolite.mirror.simple = "git@github.com:user/repo.git"
+    """
+
     def __init__(self, path):
         self.path = path
 
@@ -34,6 +48,14 @@ class Repo(object):
 
         return users
 
+    def read(self):
+        with open(str(self.path)) as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            config = f.read()
+            fcntl.flock(f, fcntl.LOCK_UN)
+
+        return config
+
     def write(self, string):
         with open(self.path, 'a') as f:
             fcntl.flock(f, fcntl.LOCK_EX)
@@ -45,3 +67,17 @@ class Repo(object):
             fcntl.flock(f, fcntl.LOCK_EX)
             f.write(string)
             fcntl.flock(f, fcntl.LOCK_UN)
+
+    def write_config(self, config):
+        """
+        Overwrite only the config part of a repository, not the users.
+        """
+
+        new_content = ""
+        content = self.read()
+
+        for line in content.split("\n"):
+            if not re.match(CONFIG_PATTERN, line):
+                new_content += line + "\n"
+
+        return self.overwrite(new_content + config)

@@ -64,10 +64,10 @@ def test_if_user_is_admin():
         assert user.is_admin
 
 
-@pytest.mark.xfail(raises=ValueError)
 def test_get_user_by_nothing_it_should_raise_value_error():
     mocks = set_mocks()
 
     with patch.multiple('pyolite.models.user', Path=mocks['path'],
                         ListKeys=mocks['keys']):
-        User.get(MagicMock(), mocks['git'], mocks['path'])
+        with pytest.raises(ValueError):
+            User.get(MagicMock(), mocks['git'], mocks['path'])

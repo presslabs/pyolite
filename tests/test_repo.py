@@ -54,6 +54,32 @@ def test_it_should_write_to_repo_config():
         f.truncate()
 
 
+def test_setting_config_will_not_overwrite_users():
+    path = 'tests/fixtures/empty_repo.conf'
+
+    Repo(path).write('''
+repo test-repo
+    RW+   =    @support
+    R     =    gitweb
+    config test = testconfig
+''')
+
+    Repo(path).write_config("    config another = anotherconfig\n")
+
+    with open(path, 'r+') as f:
+        assert f.read() == '''
+repo test-repo
+    RW+   =    @support
+    R     =    gitweb
+
+    config another = anotherconfig
+'''
+
+        f.seek(0)
+        f.write('')
+        f.truncate()
+
+
 def test_it_should_overwrite_the_repo_config():
     path = 'tests/fixtures/empty_repo.conf'
 

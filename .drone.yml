@@ -1,0 +1,15 @@
+pipeline:
+  test-pyolite:
+    image: python:${PYTHON}-alpine
+    pull: true
+    commands:
+      - apk update && apk add git
+      - pip install -r requirements.dev.txt
+      - pip install python-coveralls
+      - pytest tests/
+
+matrix:
+  PYTHON:
+    - "2.7"
+    - "3.5"
+    - "3.6"
