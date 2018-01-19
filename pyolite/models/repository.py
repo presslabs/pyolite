@@ -28,12 +28,10 @@ class Repository(object):
                     return cls(lookup_repo, path, git)
         return None
 
-    @property
-    def config(self):
+    def get_config(self):
         return self._serialize_config()
 
-    @config.setter
-    def config(self, values):
+    def add_config(self, values):
         if isinstance(values, dict):
             raw_values = values.items()
         elif isinstance(values, list) or isinstance(values, set) or isinstance(values, tuple):
@@ -47,7 +45,7 @@ class Repository(object):
         for config in raw_values:
             current_config[config[0]] = config[1]
 
-        self.repo.set_config(self._serialize_config(current_config))
+        self.repo.write_config(self._serialize_config(current_config))
 
     def _serialize_config(self, structured_config=None):
         structured_config = structured_config or self._read_current_config()

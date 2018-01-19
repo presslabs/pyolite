@@ -5,6 +5,18 @@ from .patterns import CONFIG_PATTERN
 
 
 class Repo(object):
+    """
+    Low level class, used to operate over raw gitolite config files.
+    A gitolite config file has the following structure:
+
+    repo repo_name
+        RW    =    readwriteuser
+        RW+   =    @readwritegroup
+        R     =    readuser
+
+        config gitolite.mirror.simple = "git@github.com:user/repo.git"
+    """
+
     def __init__(self, path):
         self.path = path
 
@@ -56,7 +68,11 @@ class Repo(object):
             f.write(string)
             fcntl.flock(f, fcntl.LOCK_UN)
 
-    def set_config(self, config):
+    def write_config(self, config):
+        """
+        Overwrite only the config part of a repository, not the users.
+        """
+
         new_content = ""
         content = self.read()
 

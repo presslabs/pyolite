@@ -64,7 +64,7 @@ repo test-repo
     config test = testconfig
 ''')
 
-    Repo(path).set_config("    config another = anotherconfig\n")
+    Repo(path).write_config("    config another = anotherconfig\n")
 
     with open(path, 'r+') as f:
         assert f.read() == '''

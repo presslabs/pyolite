@@ -44,15 +44,15 @@ def test_if_we_find_only_directories_should_return_none():
 
 def test_set_new_configs():
     repository = Repository('empty_repo', 'tests/fixtures/', 'git')
-    repository.repo.write('''
+    repository.repo.overwrite('''
 repo test-repo
     RW+   =    @support
     R     =    gitweb
     config test = testconfig
 ''')
 
-    repository.config = ('test', 'anothertest')
-    repository.config = ('another', 'test')
+    repository.add_config(('test', 'anothertest'))
+    repository.add_config(('another', 'test'))
 
     content = repository.repo.read()
 
