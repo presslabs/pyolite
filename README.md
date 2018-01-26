@@ -1,10 +1,18 @@
 pyolite [![Build Status](https://travis-ci.org/PressLabs/pyolite.svg?branch=master)](https://travis-ci.org/PressLabs/pyolite) [![Coverage Status](https://coveralls.io/repos/PressLabs/pyolite/badge.svg?branch=master)](https://coveralls.io/github/PressLabs/pyolite)
 =======
-# Python wrapper for gitolite
 
-Easy and simple to use, just `pip install pyolite` and boom!!!
+# Welcome to pyolite
+
+pyolite is a Python wrapper for gitolite.
+
+Easy and simple to use, just type `pip install pyolite`.
 
 Using an intuitive API, `pyolite` helps you to easily create users and repos using `gitolite`.
+
+pyolite was developed by the awesome engineering team at [Presslabs](https://www.presslabs.com/), 
+a Managed WordPress Hosting provider.
+
+For more open-source projects, check [Presslabs Code](https://www.presslabs.org/). 
 
 ## Gitolite Setup Prerequisites
 
