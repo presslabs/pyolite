@@ -24,7 +24,12 @@ class Repository(object):
                 continue
 
             with open(str(obj)) as f:
-                if "repo %s" % lookup_repo in f.read():
+                try:
+                    first_line = f.read().split('\n')[0]
+                except IndexError:
+                    return None
+
+                if "repo %s" % lookup_repo == first_line.strip():
                     return cls(lookup_repo, path, git)
         return None
 
