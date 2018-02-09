@@ -90,7 +90,7 @@ class ListUsers(object):
 
                 users_serialized += "    %s     =    %s\n" % (permission,
                                                               user.name)
-        config = "" if overwrite_config else self.repository_model.config
+        config = "" if overwrite_config else self.repository_model.get_config()
         self.repo.overwrite(users_serialized + config)
 
         users = ", ".join((user for user, permission in users))
