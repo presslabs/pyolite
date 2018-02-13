@@ -51,6 +51,7 @@ class Repository(object):
             current_config[config[0]] = config[1]
 
         self.repo.write_config(self._serialize_config(current_config))
+        self.git.commit(['conf'], "Update %s's config" % self.name)
 
     def _serialize_config(self, structured_config=None):
         structured_config = structured_config or self._read_current_config()
