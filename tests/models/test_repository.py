@@ -61,7 +61,7 @@ def test_if_we_find_only_directories_should_return_none():
 
 
 def test_set_new_configs():
-    repository = Repository('empty_repo', 'tests/fixtures/', 'git')
+    repository = Repository('empty_repo', 'tests/fixtures/', MagicMock())
     repository.repo.overwrite('''
 repo test-repo
     RW+   =    @support
