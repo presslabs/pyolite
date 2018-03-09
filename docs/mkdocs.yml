@@ -1,0 +1,16 @@
+site_name: pyolite
+site_url: https://presslabs.org/pyolite/
+repo_url: https://github.com/Presslabs/pyolite.git
+repo_name: pyolite
+site_author: Presslabs
+theme_dir: docs-theme
+docs_dir: documentation
+site_dir: compiled_docs
+extra:
+  home_url: https://www.presslabs.com
+markdown_extensions:
+    - admonition
+    - toc:
+        baselevel: 1
+pages:
+    - General: 'index.md'
