@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 from unipath import Path
 
 from pyolite.repo import Repo
@@ -62,10 +63,10 @@ class Repository(object):
         return config
 
     def _read_current_config(self):
-        return {
+        return OrderedDict(**{
             result.group(3): result.group(6)
             for result in re.finditer(CONFIG_PATTERN, self.repo.read())
-        }
+        })
 
     def __str__(self):
         return "< %s >" % self.name
