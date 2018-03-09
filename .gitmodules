@@ -1,4 +1,4 @@
 [submodule "docs/docs-theme"]
 	path = docs/docs-theme
-	url = git@github.com:PressLabs/docs-theme.git
+	url = https://github.com/PressLabs/docs-theme.git
 	branch = prod
